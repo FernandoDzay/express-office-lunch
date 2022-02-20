@@ -7,6 +7,7 @@ const UsersMiddleware = require('../middlewares/UsersMiddleware');
 router.use(UsersMiddleware.globalBodyValidations());
 
 // --------- Routes
-router.post('/:id', UsersMiddleware.requiredParamId(), UsersController.getUser);
+router.get('/:id', UsersMiddleware.requiredParamId(), UsersController.getUser);
+router.post('/create', UsersMiddleware.createUserRules(), UsersController.create);
 
 module.exports = router;

@@ -14,7 +14,7 @@ module.exports = class Validator {
         }
         const extractedErrors = [];
         errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }));
-        res.json(extractedErrors);
+        res.status(400).json(extractedErrors);
     }
 
     static globalBodyValidations() {

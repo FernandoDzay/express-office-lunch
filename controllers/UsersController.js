@@ -1,22 +1,22 @@
+const { response } = require('express');
 const {User} = require('../configs/sequelize/models');
 
 module.exports = {
 
     async getUser(req, res) {
+        const user = await User.findByPk(req.params.id);
+        if(user === null) return res.status(404).json({error: "no se encontró ningún usuario"});
+        return res.status(200).json({data: user.toJSON()});
+    },
 
-        const user = User.build({
-            username: "Luis",
-            password: "123456",
-            image: "/avatar.jpg",
-            birth_month: 1,
-            birth_day: 2,
-        });
-
-
-
-        // await user.save();
-
-        res.send( req.body.test );
+    async create(req, res, next) {
+        const data = req.body;
+        const user = User.build(data);
+        try { await user.customSave(); } 
+        catch(e) { return next("No se pudo guardar el usuario"); }
+        return res.status(201).json(user);
     }
+
+    
 
 }
