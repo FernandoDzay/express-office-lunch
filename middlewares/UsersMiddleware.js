@@ -4,6 +4,7 @@ const Validator = require('../utils/Validator');
 module.exports = class UsersMiddleware extends Validator {
 
     static globalValidationRules = [
+        body('email').optional().escape().trim().isEmail().withMessage("Cadena debe ser Email"),
         body('username').optional().escape().trim().isLength({min: 4, max: 30}).withMessage("Cadena debe de tener longitud entre 4 y 30"),
         body('password').optional().escape().trim().isLength({min: 4, max: 30}).withMessage("Cadena debe de tener longitud entre 4 y 30"),
         body('image').optional().trim().isLength({min: 4, max: 200}).withMessage("Cadena debe de tener longitud entre 4 y 200"),
@@ -17,6 +18,7 @@ module.exports = class UsersMiddleware extends Validator {
     static createUserRules() {
         return [
             [
+                body('email').exists().withMessage("Email es requerido"),
                 body('username').exists().withMessage("Username es requerido"),
                 body('password').exists().withMessage("Password es requerido"),
                 body('birth_month').exists().withMessage("birth_month es requerido"),

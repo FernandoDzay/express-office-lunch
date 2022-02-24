@@ -1,8 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = 3001;
 const UsersRoutes = require('./routes/UsersRoutes');
 const HomeRoutes = require('./routes/HomeRoutes');
+const AuthRoutes = require('./routes/AuthRoutes');
 const ErrorHandler = require('./middlewares/ErrorHandler');
 
 
@@ -11,6 +13,7 @@ app.use(express.json());
 /* ------------------------ Routes -------------------------------- */
 app.use('/', HomeRoutes);
 app.use('/users', UsersRoutes);
+app.use('/auth', AuthRoutes);
 /* ---------------------------------------------------------------- */
 
 // Error Handling

@@ -8,6 +8,6 @@ router.use(UsersMiddleware.globalBodyValidations());
 
 // --------- Routes
 router.get('/:id', UsersMiddleware.requiredParamId(), UsersController.getUser);
-router.post('/create', UsersMiddleware.createUserRules(), UsersController.create);
+router.delete('/delete/:id', UsersMiddleware.requiredParamId(), UsersController.delete);
 
 module.exports = router;
