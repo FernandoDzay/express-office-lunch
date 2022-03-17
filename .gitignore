@@ -1,3 +1,4 @@
 /node_modules/
+/public/img/
 .env
 notes.txt
