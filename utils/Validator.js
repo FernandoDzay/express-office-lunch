@@ -12,8 +12,8 @@ module.exports = class Validator {
         if (errors.isEmpty()) {
         return next();
         }
-        const extractedErrors = [];
-        errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }));
+        const extractedErrors = {};
+        errors.array().forEach(err => extractedErrors[err.param] = err.msg);
         res.status(400).json(extractedErrors);
     }
 
