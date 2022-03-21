@@ -7,7 +7,7 @@ module.exports = class FoodsMiddleware extends Validator {
     static globalValidationRules = [
         body('full_name').optional().escape().isLength({min: 4, max: 30}).withMessage("Cadena debe de tener longitud entre 4 y 30"),
         body('short_name').optional().escape().isLength({min: 4, max: 30}).withMessage("Cadena debe de tener longitud entre 4 y 30"),
-        body('price').optional().isInt({min: 0}).withMessage("Price debe ser número")
+        body('price').optional().toFloat().isFloat({min: 0}).withMessage("Price debe ser número, y mayor que 0")
     ];
 
     static uploadErrorHandlder(error, req, res, next) {
@@ -17,7 +17,7 @@ module.exports = class FoodsMiddleware extends Validator {
 
     static uploadImage() {
         const destination = 'public/img/foods/';
-        const extAllowed = /jpeg|jpg|png|gif/;
+        const extAllowed = /jpeg|jpg|png/;
         const identifier = 'image';
         const fileHandler = new FileHandler(destination, extAllowed, identifier);
         return fileHandler.single();
@@ -27,6 +27,17 @@ module.exports = class FoodsMiddleware extends Validator {
         return [
             [
                 body('full_name').exists().withMessage("full_name es requerido"),
+                body('price').exists().withMessage("price es requerido"),
+            ],
+            this.validationHandler
+        ];
+    }
+
+    static update() {
+        return [
+            [
+                body('full_name').exists().withMessage("full_name es requerido"),
+                body('price').exists().withMessage("price es requerido"),
             ],
             this.validationHandler
         ];

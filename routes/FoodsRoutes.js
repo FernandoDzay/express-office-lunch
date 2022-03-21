@@ -4,11 +4,36 @@ const FoodsController = require('../controllers/FoodsController');
 const FoodsMiddleware = require('../middlewares/FoodsMiddleware');
 
 
-
-// ------------ Middleware
-// router.use(FoodsMiddleware.globalBodyValidations());
-
 // ------------ Routes
-router.post('/create', FoodsMiddleware.uploadImage(), FoodsMiddleware.uploadErrorHandlder, FoodsMiddleware.globalBodyValidations(), FoodsController.create);
+router.get(
+    '/:id',
+    FoodsMiddleware.requiredParamId(),
+    FoodsController.get
+);
+
+router.post(
+    '/create',
+    FoodsMiddleware.uploadImage(),
+    FoodsMiddleware.uploadErrorHandlder,
+    FoodsMiddleware.globalBodyValidations(),
+    FoodsMiddleware.create(),
+    FoodsController.create
+);
+
+router.put(
+    '/update',
+    FoodsMiddleware.uploadImage(),
+    FoodsMiddleware.uploadErrorHandlder,
+    FoodsMiddleware.globalBodyValidations(),
+    FoodsMiddleware.requiredBodyId(),
+    FoodsMiddleware.update(),
+    FoodsController.update
+);
+
+router.delete(
+    '/delete/:id',
+    FoodsMiddleware.requiredParamId(),
+    FoodsController.delete
+);
 
 module.exports = router;

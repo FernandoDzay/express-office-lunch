@@ -7,6 +7,7 @@ const UsersRoutes = require('./routes/UsersRoutes');
 const HomeRoutes = require('./routes/HomeRoutes');
 const AuthRoutes = require('./routes/AuthRoutes');
 const FoodsRoutes = require('./routes/FoodsRoutes');
+const ExtrasRoutes = require('./routes/ExtrasRoutes');
 const ErrorHandler = require('./middlewares/ErrorHandler');
 
 
@@ -19,6 +20,7 @@ app.use('/', HomeRoutes);
 app.use('/users', UsersRoutes);
 app.use('/auth', AuthRoutes);
 app.use('/foods', FoodsRoutes);
+app.use('/extras', ExtrasRoutes);
 /* ---------------------------------------------------------------- */
 
 // Error Handling
