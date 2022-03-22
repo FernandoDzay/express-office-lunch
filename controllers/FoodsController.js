@@ -5,6 +5,12 @@ const fs = require('fs');
 module.exports = {
 
     async get(req, res, next) {
+        const food = await Food.findAll();
+        if(food === null) return res.status(404).json({error: 'Comidas no encontradas'});
+        return res.json(food);
+    },
+
+    async getFoods(req, res, next) {
         const food = await Food.findByPk(req.params.id);
         if(food === null) return res.status(404).json({error: 'Comida no encontrada'});
         return res.json(food);

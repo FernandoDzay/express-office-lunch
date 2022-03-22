@@ -5,7 +5,9 @@ const ExtrasMiddleware = require('../middlewares/ExtrasMiddleware');
 
 
 // ------------ Routes
-router.get('/:id', ExtrasMiddleware.requiredParamId(), ExtrasController.get);
+router.get('/', ExtrasController.get);
+
+router.get('/:id', ExtrasMiddleware.requiredParamId(), ExtrasController.getExtra);
 
 router.post('/create',
     ExtrasMiddleware.globalBodyValidations(),

@@ -6,9 +6,14 @@ const FoodsMiddleware = require('../middlewares/FoodsMiddleware');
 
 // ------------ Routes
 router.get(
+    '/',
+    FoodsController.get
+);
+
+router.get(
     '/:id',
     FoodsMiddleware.requiredParamId(),
-    FoodsController.get
+    FoodsController.getFoods
 );
 
 router.post(

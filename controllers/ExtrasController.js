@@ -3,6 +3,12 @@ const {Extra} = require('../configs/sequelize/models');
 module.exports = {
 
     async get(req, res, next) {
+        const extra = await Extra.findAll();
+        if(extra === null) return res.status(404).json({error: 'No existen extras'});
+        return res.json(extra);
+    },
+
+    async getExtra(req, res, next) {
         const extra = await Extra.findByPk(req.params.id);
         if(extra === null) return res.status(404).json({error: 'Extra no encontrado'});
         return res.json(extra);
