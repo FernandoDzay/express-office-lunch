@@ -5,7 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
     static associate(models) {
-      this.hasOne(models.User_group);
+      this.hasOne(models.User_group, {foreignKey: 'group_id'});
     }
   }
   Group.init({

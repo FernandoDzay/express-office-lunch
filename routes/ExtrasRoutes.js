@@ -3,6 +3,7 @@ const router = express.Router();
 const ExtrasController = require('../controllers/ExtrasController');
 const ExtrasMiddleware = require('../middlewares/ExtrasMiddleware');
 
+router.use(ExtrasMiddleware.globalBodyValidations());
 
 // ------------ Routes
 router.get('/', ExtrasController.get);
@@ -10,14 +11,12 @@ router.get('/', ExtrasController.get);
 router.get('/:id', ExtrasMiddleware.requiredParamId(), ExtrasController.getExtra);
 
 router.post('/create',
-    ExtrasMiddleware.globalBodyValidations(),
     ExtrasMiddleware.create(),
     ExtrasController.create
 );
 
 router.put(
     '/update',
-    ExtrasMiddleware.globalBodyValidations(),
     ExtrasMiddleware.requiredBodyId(),
     ExtrasMiddleware.update(),
     ExtrasController.update

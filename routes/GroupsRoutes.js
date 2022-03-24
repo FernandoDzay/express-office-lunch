@@ -1,20 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const {Group, User_group} = require('../configs/sequelize/models');
+const GroupsController = require('../controllers/GroupsController');
+const GroupsMiddleware = require('../middlewares/GroupsMiddleware');
 
 
-router.post('/set', async (req, res, next) => {
+router.use(GroupsMiddleware.globalBodyValidations());
 
-    const {user_id, group_id} = req.body;
-    
-    const user_group = new User_group({user_id, group_id, status: 1});
+// ---------- Routes
 
+router.get('/get', GroupsController.get);
 
+router.post('/set', GroupsMiddleware.requireUserId(), GroupsMiddleware.requireGroupId(), GroupsController.set);
 
-    await user_group.save()
-    .then(r => res.status(201).json({message: "Group Creada"}))
-    .catch(e => next(e));
-});
+router.delete('/delete/:id', GroupsMiddleware.requiredParamId(), GroupsController.delete);
 
 
 module.exports = router;

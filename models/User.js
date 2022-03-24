@@ -6,7 +6,7 @@ const saltRounds = 10;
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
       static associate(models) {
-        this.hasOne(models.User_group);
+        this.hasOne(models.User_group, {foreignKey: 'user_id'});
       }
 
       customSave = async () => {

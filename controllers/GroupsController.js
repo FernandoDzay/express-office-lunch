@@ -1,0 +1,44 @@
+const {User_group, User, Group} = require('../configs/sequelize/models');
+
+module.exports = {
+
+    async get(req, res, next) {
+        const users_groups = await User_group.findAll({
+            attributes: ['id'],
+            include: [
+                {model: Group, as: 'group'},
+                {model: User, as: 'user', attributes: ['id', 'username']}
+            ],
+            order: [[{model: Group, as: 'group'}, 'id']],
+        });
+
+        if(users_groups === null) return res.status(404).json({error: 'No está lleno ningún grupo'});
+        return res.json(users_groups);
+    },
+
+    async set(req, res, next) {
+        const {user_id, group_id} = req.body;
+        
+        const user = await User.findByPk(user_id);
+        const group = await Group.findByPk(group_id);
+
+        if(!user || !group) return res.status(400).json({error: 'Ingresa un usuario y grupo correcto'});
+        
+        const [user_group, created] = await User_group.findOrCreate({where: {user_id}, defaults: {user_id, group_id}});
+        if(created) return res.status(201).json({message: 'Relación creada'});
+    
+        user_group.group_id = group_id;
+        if(req.body.status) user_group.status = req.body.status;
+        await user_group.save()
+        .then(r => res.status(201).json({message: 'Relación actualizada'}))
+        .catch(e => next(e));
+    },
+
+    async delete(req, res) {
+        const user_group = await User_group.findByPk(req.params.id);
+        if(user_group === null) return res.status(404).json({error: 'Elemento no encontrado'});
+        await user_group.destroy();
+        return res.json({message: 'Elemento borrado con éxito'});
+    }
+
+}

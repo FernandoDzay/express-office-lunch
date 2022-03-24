@@ -9,9 +9,8 @@ module.exports = class Validator {
 
     static validationHandler = (req, res, next) => {
         const errors = validationResult(req)
-        if (errors.isEmpty()) {
-        return next();
-        }
+        if (errors.isEmpty())  return next();
+        
         const extractedErrors = {};
         errors.array().forEach(err => extractedErrors[err.param] = err.msg);
         res.status(400).json(extractedErrors);

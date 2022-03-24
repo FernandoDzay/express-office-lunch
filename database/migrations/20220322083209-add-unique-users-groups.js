@@ -11,6 +11,7 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
+    await queryInterface.removeConstraint('users_groups', 'users_groups_ibfk_1')
     await queryInterface.removeConstraint('users_groups', 'unique_user_id')
   }
 };
