@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class Food extends Model {
 
     static associate(models) {
-
+      this.hasOne(models.Menu, {foreignKey: 'food_id'});
     }
   }
   Food.init(

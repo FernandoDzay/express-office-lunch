@@ -11,7 +11,7 @@ module.exports = {
 
     async create(req, res, next) {
         const validation = await Setting.findOne({where: {setting: req.body.setting}});
-        if(validation !== null) return res.json({error: 'Setting existente'});
+        if(validation !== null) return res.status(400).json({error: 'Setting existente'});
         
         const data = {setting: req.body.setting};
         if(req.body.int_value === undefined) data.string_value = req.body.string_value;

@@ -10,6 +10,7 @@ const FoodsRoutes = require('./routes/FoodsRoutes');
 const ExtrasRoutes = require('./routes/ExtrasRoutes');
 const GroupsRoutes = require('./routes/GroupsRoutes');
 const SettingsRoutes = require('./routes/SettingsRoutes');
+const MenuRoutes = require('./routes/MenuRoutes');
 const ErrorHandler = require('./middlewares/ErrorHandler');
 
 
@@ -24,6 +25,7 @@ app.use('/auth', AuthRoutes);
 app.use('/foods', FoodsRoutes);
 app.use('/extras', ExtrasRoutes);
 app.use('/groups', GroupsRoutes);
+app.use('/menu', MenuRoutes);
 app.use('/settings', SettingsRoutes);
 /* ---------------------------------------------------------------- */
 
