@@ -5,7 +5,7 @@ module.exports = {
     database: process.env.DEV_DATABASE,
     host: process.env.DEV_HOST,
     dialect: "mysql",
-    timezone: "America/Merida",
+    timezone: "-06:00",
     // logging: false
   },
   test: {
@@ -14,7 +14,7 @@ module.exports = {
     database: process.env.TEST_DATABASE,
     host: process.env.TEST_HOST,
     dialect: "mysql",
-    timezone: "America/Merida",
+    timezone: "-06:00",
     logging: false
   },
   production: {
@@ -23,7 +23,7 @@ module.exports = {
     database: process.env.PRODUCTION_DATABASE,
     host: process.env.PRODUCTION_HOST,
     dialect: "mysql",
-    timezone: "America/Merida",
+    timezone: "-06:00",
     logging: false
   }
 };

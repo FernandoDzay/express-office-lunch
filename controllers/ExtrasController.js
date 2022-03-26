@@ -26,13 +26,13 @@ module.exports = {
     async update(req, res, next) {
         const { name, price } = req.body;
         const extra = await Extra.findByPk(req.body.id);
-        if(extra === null) return res.status(404).json({error: 'Extra no encontrada'});
+        if(extra === null) return res.status(404).json({error: 'Extra no encontrado'});
 
         extra.name = name;
         extra.price = price;
 
         await extra.save()
-        .then(r => res.status(200).json({message: "Extra actualizada"}))
+        .then(r => res.status(200).json({message: "Extra actualizado"}))
         .catch(e =>  next(e));
     },
 
