@@ -12,6 +12,7 @@ const GroupsRoutes = require('./routes/GroupsRoutes');
 const SettingsRoutes = require('./routes/SettingsRoutes');
 const MenuRoutes = require('./routes/MenuRoutes');
 const NotificationsRoutes = require('./routes/NotificationsRoutes');
+const OrdersRoutes = require('./routes/OrdersRoutes');
 const ErrorHandler = require('./middlewares/ErrorHandler');
 
 
@@ -29,6 +30,7 @@ app.use('/groups', GroupsRoutes);
 app.use('/menu', MenuRoutes);
 app.use('/settings', SettingsRoutes);
 app.use('/notifications', NotificationsRoutes);
+app.use('/orders', OrdersRoutes);
 /* ---------------------------------------------------------------- */
 
 // Error Handling
