@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       static associate(models) {
         this.hasOne(models.User_group, {foreignKey: 'user_id'});
         this.hasMany(models.Order, {foreignKey: 'user_id'});
+        this.hasMany(models.Payment, {foreignKey: 'user_id'});
       }
 
       customSave = async () => {

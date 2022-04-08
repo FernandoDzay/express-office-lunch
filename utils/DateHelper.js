@@ -11,6 +11,15 @@ module.exports = class DateHelper {
         return monday.startOf('isoweek').format();
     }
 
+    static getSundayLastTime(date = undefined) {
+        if(date === undefined) return moment().endOf('week').format();
+        return moment(date).endOf('week').format(); 
+    }
+
+    static getLastWeekMonday() {
+        return moment().startOf('week').subtract(7, 'day').format();
+    }
+
     static getDayOfWeek(date) {
         const daysOfWeek = [undefined, 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         const weekDayNumber = moment(date).format('E');
