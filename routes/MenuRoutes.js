@@ -2,12 +2,15 @@ const express = require('express');
 const router = express.Router();
 const MenuController = require('../controllers/MenuController');
 const MenuMiddleware = require('../middlewares/MenuMiddleware');
+const AuthMiddleware = require('../middlewares/AuthMiddleware');
 
 
+// ------------ Middlewares
+router.use(AuthMiddleware.verify);
 router.use(MenuMiddleware.globalBodyValidations());
 
-// ---------- Routes
 
+// ------------ Routes
 router.get('/get', MenuController.get);
 
 router.post('/add-food/:id', MenuMiddleware.requiredParamId(), MenuController.addFood);

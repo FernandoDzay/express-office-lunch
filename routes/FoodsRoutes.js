@@ -2,6 +2,11 @@ const express = require('express');
 const router = express.Router();
 const FoodsController = require('../controllers/FoodsController');
 const FoodsMiddleware = require('../middlewares/FoodsMiddleware');
+const AuthMiddleware = require('../middlewares/AuthMiddleware');
+
+
+// ------------ Middlewares
+router.use(AuthMiddleware.verify);
 
 
 // ------------ Routes

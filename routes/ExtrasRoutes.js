@@ -1,16 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const ExtrasController = require('../controllers/ExtrasController');
+const AuthMiddleware = require('../middlewares/AuthMiddleware');
 const ExtrasMiddleware = require('../middlewares/ExtrasMiddleware');
 
+
+// ------------ Middlewares
+router.use(AuthMiddleware.verify);
 router.use(ExtrasMiddleware.globalBodyValidations());
+
 
 // ------------ Routes
 router.get('/', ExtrasController.get);
 
 router.get('/:id', ExtrasMiddleware.requiredParamId(), ExtrasController.getExtra);
 
-router.post('/create',
+router.post(
+    '/create',
     ExtrasMiddleware.create(),
     ExtrasController.create
 );
