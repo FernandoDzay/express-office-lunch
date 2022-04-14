@@ -20,7 +20,7 @@ module.exports = class FoodsMiddleware extends Validator {
         const extAllowed = /jpeg|jpg|png/;
         const identifier = 'image';
         const fileHandler = new FileHandler(destination, extAllowed, identifier);
-        return fileHandler.single();
+        return fileHandler.single('food');
     }
 
     static create() {
@@ -42,4 +42,5 @@ module.exports = class FoodsMiddleware extends Validator {
             this.validationHandler
         ];
     }
+    
 }

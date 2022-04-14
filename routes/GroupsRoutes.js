@@ -13,9 +13,9 @@ router.use(GroupsMiddleware.globalBodyValidations());
 // ---------- Routes
 router.get('/get', GroupsController.get);
 
-router.post('/set', GroupsMiddleware.requireUserId(), GroupsMiddleware.requireGroupId(), GroupsController.set);
+router.post('/set', AuthMiddleware.adminUserOnly, GroupsMiddleware.requireUserId(), GroupsMiddleware.requireGroupId(), GroupsController.set);
 
-router.delete('/delete/:id', GroupsMiddleware.requiredParamId(), GroupsController.delete);
+router.delete('/delete/:id', AuthMiddleware.adminUserOnly, GroupsMiddleware.requiredParamId(), GroupsController.delete);
 
 
 module.exports = router;

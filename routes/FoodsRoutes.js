@@ -23,6 +23,7 @@ router.get(
 
 router.post(
     '/create',
+    AuthMiddleware.adminUserOnly,
     FoodsMiddleware.uploadImage(),
     FoodsMiddleware.uploadErrorHandlder,
     FoodsMiddleware.globalBodyValidations(),
@@ -32,6 +33,7 @@ router.post(
 
 router.put(
     '/update',
+    AuthMiddleware.adminUserOnly,
     FoodsMiddleware.uploadImage(),
     FoodsMiddleware.uploadErrorHandlder,
     FoodsMiddleware.globalBodyValidations(),
@@ -42,8 +44,10 @@ router.put(
 
 router.delete(
     '/delete/:id',
+    AuthMiddleware.adminUserOnly,
     FoodsMiddleware.requiredParamId(),
     FoodsController.delete
 );
+
 
 module.exports = router;

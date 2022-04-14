@@ -15,10 +15,11 @@ router.get('/get', PaymentsController.get);
 
 router.get('/get-user-payments', PaymentsController.getUserPayments);
 
-router.post('/create', PaymentsMiddleware.create(), PaymentsController.create);
+router.post('/create', AuthMiddleware.adminUserOnly, PaymentsMiddleware.create(), PaymentsController.create);
 
-router.patch('/update', PaymentsMiddleware.requiredBodyId(), PaymentsMiddleware.patch(), PaymentsController.patch);
+router.patch('/update', AuthMiddleware.adminUserOnly, PaymentsMiddleware.requiredBodyId(), PaymentsMiddleware.patch(), PaymentsController.patch);
 
-router.delete('/delete/:id', PaymentsMiddleware.requiredParamId(), PaymentsController.delete);
+router.delete('/delete/:id', AuthMiddleware.adminUserOnly, PaymentsMiddleware.requiredParamId(), PaymentsController.delete);
+
 
 module.exports = router;

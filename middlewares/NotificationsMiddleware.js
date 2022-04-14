@@ -23,4 +23,5 @@ module.exports = class NotificationsMiddleware extends Validator {
             this.validationHandler
         ];
     }
+    
 }

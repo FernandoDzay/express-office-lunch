@@ -57,8 +57,10 @@ module.exports = {
     },
 
     async create(req, res, next) {
-        const user = await User.findByPk(req.body.user_id, {include: Order});
+        const user = await User.findByPk(req.body.user_id);
         if(user === null) return res.status(404).json({error: 'No se encontró el usuario'});
+
+        const userOrders = await Order.findAll({where: {createdAt: {[Op.gte]: moment().format('YYYY-MM-DD')}, user_id: user.id}});
 
         const order = new Order({user_id: req.body.user_id});
         order.user_id = user.id;
@@ -71,7 +73,34 @@ module.exports = {
             order.price = food.price;
 
             const setting = await Setting.findOne({where: {setting: 'discount_price'}});
-            if(setting.int_value > 0 && food.price > setting.int_value && !userHasAlreadyFoodOrder(user)) order.discount = food.price - setting.int_value;
+            if(setting.int_value > 0 && food.price > setting.int_value && !userHasAlreadyFoodOrder(userOrders)) order.discount = food.price - setting.int_value;
+        }
+        else {
+            const extra = await Extra.findByPk(req.body.extra_id);
+            if(extra === null) return res.status(404).json({error: 'No se encontró el extra'});
+            order.extra_id = extra.id;
+            order.name = extra.name;
+            order.price = extra.price;
+        }
+
+        await order.save()
+        .then(r => res.status(201).json({message: 'La orden fue creada con éxito'}))
+        .catch(e => next(e));
+    },
+
+    async createUserOrder(req, res, next) {
+        const userOrders = await Order.findAll({where: {createdAt: {[Op.gte]: moment().format('YYYY-MM-DD')}, user_id: req.body.logged_user.id}});
+        const order = new Order({user_id: req.body.logged_user.id});
+
+        if(req.body.food_id) {
+            const food = await Food.findByPk(req.body.food_id);
+            if(food === null) return res.status(404).json({error: 'No se encontró la comida'});
+            order.food_id = food.id;
+            order.name = food.full_name;
+            order.price = food.price;
+
+            const setting = await Setting.findOne({where: {setting: 'discount_price'}});
+            if(setting.int_value > 0 && food.price > setting.int_value && !userHasAlreadyFoodOrder(userOrders)) order.discount = food.price - setting.int_value;
         }
         else {
             const extra = await Extra.findByPk(req.body.extra_id);
@@ -94,9 +123,6 @@ module.exports = {
     },
 
     async deleteUserOrder(req, res, next) {
-        const user = await User.findByPk(req.body.user_id);
-        if(user === null) return res.status(404).json({error: 'No se encontró el usuario'});
-
         const today_start = dateHelper.getTodaysInitialTime();
         const today_end = dateHelper.getTodaysEndTime();
 
@@ -104,7 +130,7 @@ module.exports = {
         if(req.body.food_id) {
             order = await Order.findOne({where: {
                 food_id: req.body.food_id,
-                user_id: req.body.user_id,
+                user_id: req.body.logged_user.id,
                 createdAt: { [Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end} }}, order: [['discount', 'ASC']]});
         }
         else {
@@ -122,7 +148,7 @@ module.exports = {
 }
 
 
-const userHasAlreadyFoodOrder = (user) => user.Orders.some(order => order.food_id !== null);
+const userHasAlreadyFoodOrder = (orders) => orders.length > 0;
 
 function getOrdersWeekArray(orders) {
     const ordersWeekArray = {total: 0, discount: 0, net_total: 0, orders: []};

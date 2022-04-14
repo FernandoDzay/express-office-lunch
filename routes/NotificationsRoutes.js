@@ -13,7 +13,7 @@ router.use(NotificationsMiddleware.globalBodyValidations());
 // ---------- Routes
 router.get('/get/:id', NotificationsMiddleware.requiredParamId(), NotificationsController.get);
 
-router.post('/send', NotificationsMiddleware.send(), NotificationsController.send);
+router.post('/send', AuthMiddleware.adminUserOnly, NotificationsMiddleware.send(), NotificationsController.send);
 
 router.patch('/mark-read/:id', NotificationsMiddleware.requiredParamId(), NotificationsController.markRead);
 

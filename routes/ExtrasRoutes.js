@@ -17,17 +17,20 @@ router.get('/:id', ExtrasMiddleware.requiredParamId(), ExtrasController.getExtra
 
 router.post(
     '/create',
+    AuthMiddleware.adminUserOnly,
     ExtrasMiddleware.create(),
     ExtrasController.create
 );
 
 router.put(
     '/update',
+    AuthMiddleware.adminUserOnly,
     ExtrasMiddleware.requiredBodyId(),
     ExtrasMiddleware.update(),
     ExtrasController.update
 );
 
-router.delete('/delete/:id', ExtrasMiddleware.requiredParamId(), ExtrasController.delete);
+router.delete('/delete/:id', AuthMiddleware.adminUserOnly, ExtrasMiddleware.requiredParamId(), ExtrasController.delete);
+
 
 module.exports = router;

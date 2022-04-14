@@ -18,11 +18,11 @@ module.exports = class FileHandler {
         else cb("image_extension");
     }
 
-    single = () => {
+    single = (prefix) => {
         const checkFileType = this.checkFileType;
         const storage  = multer.diskStorage({
             destination: this.destination,
-            filename: function(req, file, cb) { cb(null, `food-${Date.now() + path.extname(file.originalname)}`); }
+            filename: function(req, file, cb) { cb(null, `${prefix}-${Date.now() + path.extname(file.originalname)}`); }
         });
         const upload = multer({
             storage,

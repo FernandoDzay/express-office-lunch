@@ -15,4 +15,5 @@ module.exports = class MenuMiddleware extends Validator {
             this.validationHandler
         ];
     }
+    
 }

@@ -35,4 +35,5 @@ module.exports = class GroupsMiddleware extends Validator {
             this.validationHandler
         ];
     }
+    
 }

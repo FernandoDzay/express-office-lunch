@@ -32,7 +32,7 @@ module.exports = {
         catch(e) { return next(authError); }
         
         if(!match) return res.status(400).json({error: authIncorrect});
-        jwt.sign({ id: user.id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1m'}, function(err, token) {
+        jwt.sign({ id: user.id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'}, function(err, token) {
             if(err) next(authError);
             res.status(200).json({token});
         });

@@ -16,10 +16,13 @@ router.get('/get', OrdersController.get);
 
 router.get('/get-todays-orders', OrdersController.getTodaysOrders);
 
-router.post('/create', SettingsMiddleware.verifyIfMenuIsOpen, OrdersMiddleware.validateUserId(), OrdersMiddleware.checkForOneFoodOrExtra(), OrdersController.create);
+router.post('/create', AuthMiddleware.adminUserOnly, SettingsMiddleware.verifyIfMenuIsOpen, OrdersMiddleware.validateUserId(), OrdersMiddleware.checkForOneFoodOrExtra(), OrdersController.createUserOrder);
 
-router.delete('/delete/:id', OrdersMiddleware.requiredParamId(), OrdersController.delete);
+router.post('/create-user-order', SettingsMiddleware.verifyIfMenuIsOpen, OrdersMiddleware.checkForOneFoodOrExtra(), OrdersController.createUserOrder);
 
-router.delete('/delete-user-order', SettingsMiddleware.verifyIfMenuIsOpen, OrdersMiddleware.validateUserId(), OrdersMiddleware.checkForOneFoodOrExtra(), OrdersController.deleteUserOrder);
+router.delete('/delete/:id', AuthMiddleware.adminUserOnly, OrdersMiddleware.requiredParamId(), OrdersController.delete);
+
+router.delete('/delete-user-order', SettingsMiddleware.verifyIfMenuIsOpen, OrdersMiddleware.checkForOneFoodOrExtra(), OrdersController.deleteUserOrder);
+
 
 module.exports = router;

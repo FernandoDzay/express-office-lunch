@@ -7,6 +7,7 @@ const AuthMiddleware = require('../middlewares/AuthMiddleware');
 
 // ------------ Middlewares
 router.use(AuthMiddleware.verify);
+router.use(AuthMiddleware.adminUserOnly);
 router.use(SettingsMiddleware.globalBodyValidations());
 
 

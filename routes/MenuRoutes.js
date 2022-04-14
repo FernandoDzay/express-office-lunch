@@ -13,9 +13,9 @@ router.use(MenuMiddleware.globalBodyValidations());
 // ------------ Routes
 router.get('/get', MenuController.get);
 
-router.post('/add-food/:id', MenuMiddleware.requiredParamId(), MenuController.addFood);
+router.post('/add-food/:id', AuthMiddleware.adminUserOnly, MenuMiddleware.requiredParamId(), MenuController.addFood);
 
-router.delete('/remove-food/:id', MenuMiddleware.requiredParamId(), MenuController.removeFood);
+router.delete('/remove-food/:id', AuthMiddleware.adminUserOnly, MenuMiddleware.requiredParamId(), MenuController.removeFood);
 
 
 module.exports = router;
