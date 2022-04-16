@@ -5,24 +5,18 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Notification extends Model {
 
-    send = async (user_id) => {
-      await this.save();
+    send = async (user_id, saveNotification = true) => {
+      if(saveNotification) await this.save();
       const assigned_notification = new sequelize.models.Assigned_notification({notification_id: this.id, user_id});
       return await assigned_notification.save();
     }
 
-    sendAll = async () => {
-      const {title, description} = this;
+    sendAll = async (saveNotification = true) => {
+      if(saveNotification) await this.save();
       const users = await sequelize.models.User.findAll();
-
-      const notification = new sequelize.models.Notification({title, description});
-      if(this.created_by) notification.created_by = this.created_by;
-      if(this.type) notification.type = this.type;
-
-      await notification.save();
       
       users.forEach(async user => {
-        const assigned_notification = new sequelize.models.Assigned_notification({notification_id: notification.id, user_id: user.id});
+        const assigned_notification = new sequelize.models.Assigned_notification({notification_id: this.id, user_id: user.id});
         await assigned_notification.save();
       });
     }

@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./services/Crons');
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -14,6 +15,7 @@ const MenuRoutes = require('./routes/MenuRoutes');
 const NotificationsRoutes = require('./routes/NotificationsRoutes');
 const OrdersRoutes = require('./routes/OrdersRoutes');
 const PaymentsRoutes = require('./routes/PaymentsRoutes');
+const CronsRoutes = require('./routes/CronsRoutes');
 const ErrorHandler = require('./middlewares/ErrorHandler');
 
 
@@ -33,6 +35,7 @@ app.use('/settings', SettingsRoutes);
 app.use('/notifications', NotificationsRoutes);
 app.use('/orders', OrdersRoutes);
 app.use('/payments', PaymentsRoutes);
+app.use('/crons', CronsRoutes);
 /* ---------------------------------------------------------------- */
 
 // Error Handling

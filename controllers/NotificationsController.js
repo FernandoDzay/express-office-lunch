@@ -1,12 +1,12 @@
 const {Notification, Assigned_notification, sequelize} = require('../configs/sequelize/models');
-const Moment = require('moment');
+const moment = require('moment');
 const {QueryTypes} = require('sequelize');
 
 module.exports = {
 
     async get(req, res, next) {
         const format = 'YYYY-MM-DD HH:mm:ss';
-        const createdAt = Moment( Moment().format('YYYY-MM-DD') ).format(format);
+        const createdAt = moment( moment().format('YYYY-MM-DD') ).format(format);
         const user_id = req.params.id;
 
         const query = 
@@ -40,9 +40,10 @@ module.exports = {
 
     async markRead(req, res) {
         const id = req.params.id;
-        const assigned_notification = await Assigned_notification.update({has_been_read: 1}, {where: {id}});
+        const user_id = req.body.logged_user.id;
+        const assigned_notification = await Assigned_notification.update({has_been_read: 1}, {where: {id, user_id}});
         
-        if(assigned_notification[0] !== 1) return res.status(500).json({error: 'No se pudo actualizar la notificación'});
+        if(assigned_notification[0] !== 1) return res.status(400).json({error: 'No se pudo actualizar la notificación'});
         return res.json({message: 'Notificación marcada como leída'});
     }
 
