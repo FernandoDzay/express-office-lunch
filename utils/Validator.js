@@ -13,7 +13,7 @@ module.exports = class Validator {
         
         const extractedErrors = {};
         errors.array().forEach(err => extractedErrors[err.param] = err.msg);
-        res.status(400).json(extractedErrors);
+        res.status(400).json({validation: extractedErrors});
     }
 
     static globalBodyValidations() {

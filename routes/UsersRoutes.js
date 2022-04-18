@@ -12,6 +12,8 @@ router.use(UsersMiddleware.globalBodyValidations());
 // --------- Routes
 router.get('/', AuthMiddleware.verify, UsersController.get);
 
+router.get('/logged', AuthMiddleware.verify, UsersController.getLoggedUser);
+
 router.get('/:id', AuthMiddleware.verify, AuthMiddleware.adminUserOnly, UsersMiddleware.requiredParamId(), UsersController.getUser);
 
 router.put('/update', AuthMiddleware.verify, AuthMiddleware.adminUserOnly, UsersMiddleware.requiredBodyId(), UsersController.update);

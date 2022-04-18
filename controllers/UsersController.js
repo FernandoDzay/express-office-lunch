@@ -20,6 +20,12 @@ module.exports = {
         return res.json(user);
     },
 
+    async getLoggedUser(req, res) {
+        const user = await User.findByPk(req.body.logged_user.id);
+        if(user === null) return res.status(404).json({error: "no se encontró ningún usuario"});
+        return res.json(user);
+    },
+
     async update(req, res, next) {
         const {id, email, username, birth_month, birth_day, is_guest, is_admin, status} = req.body;
         const user = await User.findByPk(id);

@@ -1,4 +1,6 @@
-const {User_group, User, Group} = require('../configs/sequelize/models');
+const {User_group, User, Group, sequelize} = require('../configs/sequelize/models');
+const {QueryTypes} = require('sequelize');
+
 
 module.exports = {
 
@@ -14,6 +16,21 @@ module.exports = {
 
         if(users_groups === null) return res.status(404).json({error: 'No está lleno ningún grupo'});
         return res.json(users_groups);
+    },
+
+    async getUserGroup(req, res, next) {
+        const user_id = req.body.logged_user.id;
+        const query = 
+        `
+            SELECT ug.id AS id, g.id AS group_id, start_time, end_time
+            FROM groups g
+            INNER JOIN users_groups ug ON g.id = ug.group_id
+            WHERE ug.user_id = :user_id
+        `;
+        const user_group = await sequelize.query(query, {replacements: {user_id}, type: QueryTypes.SELECT});
+
+        if(user_group.length === 0) return res.status(404).json({error: 'El usuario no pertenece a ningún grupo'});
+        return res.json(user_group[0]);
     },
 
     async set(req, res, next) {
