@@ -1,5 +1,6 @@
 'use strict';
 const {Model} = require('sequelize');
+const fs = require('fs');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -32,6 +33,23 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'User',
       timestamps: false,
+      hooks: {
+        beforeDestroy: deleteImage,
+        afterSave: function(instances, options) {
+          const isNewRecord = instances._options.isNewRecord;
+          const imageChanged = instances._previousDataValues.image !== instances.dataValues.image;
+          if(!isNewRecord && imageChanged) deleteImage(instances, options);
+        },
+      }
   });
   return User;
 };
+
+
+// ---------------------- Functions
+
+const deleteImage = (instances, options) => {
+  const image = instances._previousDataValues.image;
+  try { fs.unlinkSync(`public/img/users/${image}`); }
+  catch(error) { console.log(error); }
+}

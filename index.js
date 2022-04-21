@@ -6,6 +6,7 @@ const app = express();
 const port = 3001;
 const UsersRoutes = require('./routes/UsersRoutes');
 const HomeRoutes = require('./routes/HomeRoutes');
+const ImagesRoutes = require('./routes/ImagesRoutes');
 const AuthRoutes = require('./routes/AuthRoutes');
 const FoodsRoutes = require('./routes/FoodsRoutes');
 const ExtrasRoutes = require('./routes/ExtrasRoutes');
@@ -25,6 +26,7 @@ app.use(express.static('./public/'));
 
 /* ------------------------ Routes -------------------------------- */
 app.use('/', HomeRoutes);
+app.use('/images', ImagesRoutes);
 app.use('/users', UsersRoutes);
 app.use('/auth', AuthRoutes);
 app.use('/foods', FoodsRoutes);

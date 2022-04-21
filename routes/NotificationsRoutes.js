@@ -11,7 +11,7 @@ router.use(NotificationsMiddleware.globalBodyValidations());
 
 
 // ---------- Routes
-router.get('/get/:id', NotificationsMiddleware.requiredParamId(), NotificationsController.get);
+router.get('/get', NotificationsController.get);
 
 router.post('/send', AuthMiddleware.adminUserOnly, NotificationsMiddleware.send(), NotificationsController.send);
 

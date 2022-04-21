@@ -1,13 +1,14 @@
 const {Notification, Assigned_notification, sequelize} = require('../configs/sequelize/models');
 const moment = require('moment');
 const {QueryTypes} = require('sequelize');
+moment.locale('es');
 
 module.exports = {
 
     async get(req, res, next) {
         const format = 'YYYY-MM-DD HH:mm:ss';
-        const createdAt = moment( moment().format('YYYY-MM-DD') ).format(format);
-        const user_id = req.params.id;
+        const today = moment( moment().format('YYYY-MM-DD') ).format(format);
+        const user_id = req.body.logged_user.id;
 
         const query = 
         `
@@ -17,15 +18,17 @@ module.exports = {
             WHERE
                 user_id = :user_id
                 AND (
-                    a.createdAt >= :createdAt OR
+                    a.createdAt >= :today OR
+                    a.updatedAt >= :today OR
                     has_been_read = 0
                 )
             ORDER BY createdAt
         `;
-        const notifications = await sequelize.query(query, {replacements: {createdAt, user_id}, type: QueryTypes.SELECT});
+        const notifications = await sequelize.query(query, {replacements: {today, user_id}, type: QueryTypes.SELECT});
 
-        if(notifications.length === 0) return res.status(404).json({status: 0, message: 'No se encontraron notificaciones para este usuario'});
-        return res.json({status: 1, notifications});
+        if(notifications.length === 0) return res.status(404).json({message: 'No se encontraron notificaciones para este usuario'});
+        const notificacionsResponse = notifications.map(notification => ({...notification, time: moment(notification.createdAt).fromNow()}));
+        return res.json(notificacionsResponse);
     },
 
     async send(req, res, next) {

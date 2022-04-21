@@ -50,7 +50,8 @@ module.exports = {
 
     async updateLoggedUserImage(req, res, next) {
         const user = await User.findByPk(req.body.logged_user.id);
-        if(user === null) return res.status(404).json({error: "no se encontró ningún usuario"})
+        if(user === null) return res.status(404).json({error: "no se encontró ningún usuario"});
+        if(req.file === undefined) return res.status(400).json({error: "Debes mandar correctamente la imagen"});
         user.image = req.file.filename;
 
         await user.save()
