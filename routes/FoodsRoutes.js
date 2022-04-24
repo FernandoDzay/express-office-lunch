@@ -12,6 +12,7 @@ router.use(AuthMiddleware.verify);
 // ------------ Routes
 router.get(
     '/',
+    AuthMiddleware.adminUserOnly,
     FoodsController.get
 );
 

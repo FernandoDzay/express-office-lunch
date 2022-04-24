@@ -1,4 +1,4 @@
-const {Food} = require('../configs/sequelize/models');
+const {Food, Menu} = require('../configs/sequelize/models');
 const fs = require('fs');
 
 
@@ -46,6 +46,10 @@ module.exports = {
     async delete(req, res) {
         const food = await Food.findByPk(req.params.id);
         if(food === null) return res.status(404).json({error: 'Comida no encontrada'});
+
+        foodInMenu = await Menu.findOne({where: {food_id: food.id}});
+        if(foodInMenu !== null) return res.status(400).json({deleteError: 'Esa comida se encuentra en el menú, bórrala primero'});
+
         await food.destroy();
         return res.json({message: 'Comida borrada con éxito'});
     }

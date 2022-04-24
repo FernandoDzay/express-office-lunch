@@ -28,9 +28,9 @@ module.exports = class SettingsMiddleware extends Validator {
     }
 
     static async verifyIfMenuIsOpen(req, res, next) {
-        const setting = await Setting.findOne({where: {setting: 'menu_activated'}});
-        if(setting === null) return res.status(500).json({error: 'Debe de existir la configuracion menu_activated'});
-        if(setting.int_value !== 0 && setting.int_value !== 1) return res.status(500).json({error: 'menu_activated Debe de estar entre 0 y 1'});
+        const setting = await Setting.findOne({where: {setting: 'menu_open'}});
+        if(setting === null) return res.status(500).json({error: 'Debe de existir la configuracion menu_open'});
+        if(setting.int_value !== 0 && setting.int_value !== 1) return res.status(500).json({error: 'menu_open Debe de estar entre 0 y 1'});
 
         if(setting.int_value === 1) return next();
         return res.json({error: 'El menú está cerrado', display: 'El menú está cerrado'})

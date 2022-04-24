@@ -11,7 +11,7 @@ module.exports = class ExtrasMiddleware extends Validator {
     static create() {
         return [
             [
-                body('name').exists().withMessage("full_name es requerido"),
+                body('name').exists().withMessage("name es requerido"),
                 body('price').exists().withMessage("price es requerido"),
             ],
             this.validationHandler

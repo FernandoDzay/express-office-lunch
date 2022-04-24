@@ -17,18 +17,10 @@ module.exports = {
         },
       },
       food_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'foods',
-          key: 'id'
-        },
+        type: Sequelize.INTEGER
       },
       extra_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'extras',
-          key: 'id'
-        },
+        type: Sequelize.INTEGER
       },
       name: {
         allowNull: false,
