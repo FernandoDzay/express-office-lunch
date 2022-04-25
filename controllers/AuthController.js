@@ -9,12 +9,12 @@ module.exports = {
         let user;
 
         try { user = await User.findOne({where: {email: data.email}}); }
-        catch(e) { return next(authError); }
+        catch(e) { next(authError); console.log(e); return; }
         if(user !== null) return res.status(400).json({error: "Ya existe ese Email"});
 
         user = User.build(data);
         try { await user.customSave(); }
-        catch(e) { return next(authError); }
+        catch(e) { next(authError); console.log(e); return; }
         return res.status(201).json({message: 'Usuario creado'});
     },
 
