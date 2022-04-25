@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     has_been_read: DataTypes.BOOLEAN
   }, {
     sequelize,
+    tableName: 'assigned_notifications',
     modelName: 'Assigned_notification',
   });
   return Assigned_notification;

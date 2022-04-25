@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.ENUM('normal', 'warning', 'danger')
   }, {
     sequelize,
+    tableName: 'notifications',
     modelName: 'Notification',
   });
   return Notification;

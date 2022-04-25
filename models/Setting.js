@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     string_value: DataTypes.STRING
   }, {
     sequelize,
+    tableName: 'settings',
     modelName: 'Setting',
     timestamps: false
   });

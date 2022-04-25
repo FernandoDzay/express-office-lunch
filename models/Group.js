@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     end_time: DataTypes.TIME
   }, {
     sequelize,
+    tableName: 'groups',
     modelName: 'Group',
     timestamps: false,
   });

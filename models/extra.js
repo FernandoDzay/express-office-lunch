@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     price: DataTypes.FLOAT,
   }, {
     sequelize,
+    tableName: 'extras',
     modelName: 'Extra',
   });
   return Extra;

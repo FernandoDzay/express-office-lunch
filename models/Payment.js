@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     payment_date: DataTypes.DATE,
   }, {
     sequelize,
+    tableName: 'payments',
     modelName: 'Payment',
   });
   return Payment;
