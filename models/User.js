@@ -31,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
       status: DataTypes.INTEGER.UNSIGNED
   }, {
       sequelize,
-      modelName: 'user',
+      modelName: 'User',
+      tableName: 'users',
       timestamps: false,
       hooks: {
         beforeDestroy: deleteImage,
