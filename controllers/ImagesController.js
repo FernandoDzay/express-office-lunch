@@ -1,24 +1,22 @@
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
+const { send } = require("process");
 
 module.exports = {
 
     users(req, res, next) {
-        const usersImagesPath = __dirname.split('\\').filter(path => path !== 'controllers').join('\\') + '\\public\\img\\users\\';
+        const usersImagesPath = path.join(__dirname, '/../public/img/users/');
         const userImage = req.params.filename;
-
-        console.log("entrando a ruta");
 
         return res.sendFile(usersImagesPath + userImage, function (err) {
             if (err) {
-                console.log("hubo error");
-                console.log(err);
                 next();
             }
         });
     },
 
     foods(req, res, next) {
-        const foodsImagesPath = __dirname.split('\\').filter(path => path !== 'controllers').join('\\') + '\\public\\img\\foods\\';
+        const foodsImagesPath = path.join(__dirname, '/../public/img/foods/');
         const foodImage = req.params.filename;
 
         return res.sendFile(foodsImagesPath + foodImage, function (err) {

@@ -6,7 +6,7 @@ module.exports = {
     host: process.env.DEV_HOST,
     dialect: "mysql",
     timezone: "-05:00",
-    // logging: false
+    logging: false
   },
   test: {
     username: process.env.TEST_USERNAME,
