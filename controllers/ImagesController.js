@@ -6,8 +6,12 @@ module.exports = {
         const usersImagesPath = __dirname.split('\\').filter(path => path !== 'controllers').join('\\') + '\\public\\img\\users\\';
         const userImage = req.params.filename;
 
+        console.log("entrando a ruta");
+
         return res.sendFile(usersImagesPath + userImage, function (err) {
             if (err) {
+                console.log("hubo error");
+                console.log(err);
                 next();
             }
         });
