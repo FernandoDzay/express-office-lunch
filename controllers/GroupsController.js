@@ -23,7 +23,7 @@ module.exports = {
         const query = 
         `
             SELECT ug.id AS id, g.id AS group_id, start_time, end_time
-            FROM groups g
+            FROM \`groups\` g
             INNER JOIN users_groups ug ON g.id = ug.group_id
             WHERE ug.user_id = :user_id
         `;
