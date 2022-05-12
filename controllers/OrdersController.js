@@ -36,12 +36,12 @@ module.exports = {
         const today_end = dateHelper.getTodaysEndTime();
 
         let orders = [];
-        if(req.body.user_id) {
-            const user = await User.findByPk(req.body.user_id);
+        if(req.params.user_id) {
+            const user = await User.findByPk(req.params.user_id);
             if(user === null) return res.status(404).json({error: 'No se encontró el usuario'});
 
             orders = await Order.findAll({
-                where: {user_id: req.body.user_id, createdAt: {[Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end}}}
+                where: {user_id: req.params.user_id, createdAt: {[Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end}}}
             });
         }
         else {
