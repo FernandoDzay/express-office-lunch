@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const {User} = require('../configs/sequelize/models');
 
 module.exports = {
- 
+
     async register(req, res, next) {
         const authError = "No se pudo guardar el usuario";
         const data = req.body;
