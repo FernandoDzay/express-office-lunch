@@ -46,10 +46,27 @@ module.exports = {
         }
         else {
             orders = await Order.findAll({
-                where: {createdAt: {[Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end}}}
+                where: {createdAt: {[Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end}}},
+                include: {model: User, as: 'user'},
+                order: ['user_id']
             });
         }
-        
+
+        if(orders.length === 0) return res.status(404).json({message: 'No hay órdenes el día de hoy'});
+        const todaysOrders = req.params.user_id ? getTodaysOrdersArray(orders) : getTodaysOrdersByUsersArray(orders);
+
+        return res.json(todaysOrders);
+    },
+
+    async make(req, res, next) {
+        const today_start = dateHelper.getTodaysInitialTime();
+        const today_end = dateHelper.getTodaysEndTime();
+
+        const orders = await Order.findAll({
+            where: {createdAt: {[Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end}}},
+            include: {model: Food, as: 'food'},
+        });
+
         if(orders.length === 0) return res.status(404).json({message: 'No hay órdenes el día de hoy'});
         const todaysOrders = getTodaysOrdersArray(orders);
 
@@ -136,7 +153,7 @@ module.exports = {
         else {
             order = await Order.findOne({where: {
                 extra_id: req.body.extra_id,
-                user_id: req.body.user_id,
+                user_id: req.body.logged_user.id,
                 createdAt: { [Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end} }}});
         }
 
@@ -216,7 +233,7 @@ function getTodaysOrdersArray(orders) {
         }
     };
 
-    orders.forEach((order, index) => {
+    orders.forEach(order => {
         const arrangedOrder = {
             id: order.id,
             name: order.name,
@@ -225,6 +242,7 @@ function getTodaysOrdersArray(orders) {
             user_price: order.price - order.discount,
             createdAt: order.createdAt
         };
+        if(order.food && order.food.short_name) arrangedOrder.short_name = order.food.short_name;
 
         if(order.food_id) {
             arrangedOrder.food_id = order.food_id;
@@ -241,4 +259,44 @@ function getTodaysOrdersArray(orders) {
     });
     
     return todaysUserOrders;
+}
+
+function getTodaysOrdersByUsersArray(orders) {
+    const todaysOrdersArray = {total: 0, discount: 0, net_total: 0, orders: []};
+    let previousUsername = null;
+
+    orders.forEach(order => {
+        const arrangedOrder = {
+            id: order.id,
+            food_id: order.food_id,
+            extra_id: order.extra_id,
+            name: order.name,
+            price: order.price,
+            discount: order.discount,
+            user_price: order.price - order.discount,
+            createdAt: order.createdAt
+        };
+        const userOrders = {
+            username: order.user.username,
+            total: 0,
+            discount: 0,
+            net_total: 0,
+            orders: [arrangedOrder]
+        }
+
+        if(previousUsername === userOrders.username) todaysOrdersArray.orders[ todaysOrdersArray.orders.length - 1 ].orders.push(arrangedOrder);
+        else todaysOrdersArray.orders.push(userOrders);
+
+        todaysOrdersArray.total += arrangedOrder.price;
+        todaysOrdersArray.discount += arrangedOrder.discount;
+        todaysOrdersArray.net_total += arrangedOrder.user_price;
+
+        todaysOrdersArray.orders[ todaysOrdersArray.orders.length - 1 ].total += arrangedOrder.price;
+        todaysOrdersArray.orders[ todaysOrdersArray.orders.length - 1 ].discount += arrangedOrder.discount;
+        todaysOrdersArray.orders[ todaysOrdersArray.orders.length - 1 ].net_total += arrangedOrder.user_price;
+
+        previousUsername = order.user.username;
+    });
+    
+    return todaysOrdersArray;
 }
