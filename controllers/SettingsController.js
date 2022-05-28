@@ -3,10 +3,20 @@ const {Setting} = require('../configs/sequelize/models');
 module.exports = {
 
     async get(req, res, next) {
-        const setting = await Setting.findAll();
+        const settings = await Setting.findAll();
 
-        if(setting === null) return res.status(404).json({error: 'No está lleno ningún setting'});
-        return res.json(setting);
+        if(settings === null) return res.status(404).json({error: 'No está lleno ningún setting'});
+
+        const arrangedSettings = {};
+        settings.forEach(setting => {
+            arrangedSettings[setting.setting] = {
+                id: setting.id,
+                int_value: setting.int_value,
+                string_value: setting.string_value,
+            }
+        });
+
+        return res.json(arrangedSettings);
     },
 
     async create(req, res, next) {

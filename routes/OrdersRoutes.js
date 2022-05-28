@@ -9,6 +9,7 @@ const AuthMiddleware = require('../middlewares/AuthMiddleware');
 // ------------ Middlewares
 router.use(AuthMiddleware.verify);
 router.use(OrdersMiddleware.globalBodyValidations());
+router.use(OrdersMiddleware.validateQueryDate);
 
 
 // ------------ Routes

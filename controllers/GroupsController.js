@@ -5,17 +5,10 @@ const {QueryTypes} = require('sequelize');
 module.exports = {
 
     async get(req, res, next) {
-        const users_groups = await User_group.findAll({
-            attributes: ['id'],
-            include: [
-                {model: Group, as: 'group'},
-                {model: User, as: 'user', attributes: ['id', 'username']}
-            ],
-            order: [[{model: Group, as: 'group'}, 'id']],
-        });
+        const groups = await Group.findAll({order: ['id']});
 
-        if(users_groups === null) return res.status(404).json({error: 'No está lleno ningún grupo'});
-        return res.json(users_groups);
+        if(groups === null) return res.status(404).json({error: 'No existen grupos'});
+        return res.json(groups);
     },
 
     async getUserGroup(req, res, next) {
@@ -31,6 +24,43 @@ module.exports = {
 
         if(user_group.length === 0) return res.status(404).json({error: 'El usuario no pertenece a ningún grupo'});
         return res.json(user_group[0]);
+    },
+
+    async getUsersGroup(req, res, next) {
+        const users_groups = await User_group.findAll({
+            attributes: ['id'],
+            include: [
+                {model: Group, as: 'group'},
+                {model: User, as: 'user', attributes: ['id', 'username']}
+            ],
+            order: [[{model: Group, as: 'group'}, 'id']],
+        });
+
+        if(users_groups.length === 0) return res.status(404).json({error: 'No está lleno ningún grupo'});
+
+        // Arranging the array
+        const arrayArranged = [];
+        let currentGroupId = null;
+
+        users_groups.forEach(user_group => {
+            const relation = {
+                id: user_group.id,
+                user: user_group.user
+            };
+            const group = {
+                group_id: user_group.group.id,
+                start_time: user_group.group.start_time,
+                end_time: user_group.group.end_time,
+                relations: [relation]
+            };
+
+            if(currentGroupId === user_group.group.id) arrayArranged[arrayArranged.length - 1].relations.push(relation);
+            else arrayArranged.push(group);
+            
+            currentGroupId = user_group.group.id;
+        });
+
+        return res.json(arrayArranged);
     },
 
     async set(req, res, next) {

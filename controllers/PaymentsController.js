@@ -7,11 +7,11 @@ const { Op } = require("sequelize");
 module.exports = {
 
     async get(req, res, next) {
-        const createdAt = req.body.payment_date === undefined ? dateHelper.getLastWeekMonday() : dateHelper.getMondayDate(req.body.payment_date);
+        const createdAt = req.query.payment_date === undefined ? dateHelper.getLastWeekMonday() : dateHelper.getMondayDate(req.query.payment_date);
         const replacements = {createdAt};
         const query = 
         `
-            SELECT custom_user_id AS id, username, SUM(custom.price - custom.discount) AS total_to_pay, COALESCE(SUM(quantity), 0) AS total_paid
+            SELECT custom_user_id AS id, username, SUM(custom.price - custom.discount) AS total_to_pay, COALESCE(total_quantity, 0) AS total_paid
             FROM 
                 (
                     SELECT u.id AS custom_user_id, username, sum(price) AS price, sum(discount) AS discount
@@ -24,12 +24,12 @@ module.exports = {
                 ) custom
             LEFT JOIN 
                 (
-                    SELECT u.id AS group_p_id, quantity
+                    SELECT u.id AS group_p_id, SUM(quantity) AS total_quantity
                     FROM users u
                     INNER JOIN payments p ON u.id = p.user_id
                     WHERE
-                        p.createdAt >= :createdAt AND
-                        p.createdAt < DATE_ADD(:createdAt, INTERVAL 7 DAY)
+                        p.payment_date >= :createdAt AND
+                        p.payment_date < DATE_ADD(:createdAt, INTERVAL 7 DAY)
                     GROUP BY u.id
                 ) group_p
             ON custom_user_id = group_p_id
@@ -42,13 +42,13 @@ module.exports = {
     },
 
     async getUserPayments(req, res, next) {
-        const user = await User.findByPk(req.body.user_id);
+        const user = await User.findByPk(req.params.id);
         if(user === null) return res.status(404).json({error: 'No se encontró el usuario'});
 
-        const initial_time = req.body.payment_date === undefined ? dateHelper.getLastWeekMonday() : dateHelper.getMondayDate(req.body.payment_date);
-        const end_time = req.body.payment_date === undefined ? dateHelper.getSundayLastTime( dateHelper.getLastWeekMonday() ) : dateHelper.getSundayLastTime(req.body.payment_date);
+        const initial_time = req.query.payment_date === undefined ? dateHelper.getLastWeekMonday() : dateHelper.getMondayDate(req.query.payment_date);
+        const end_time = req.query.payment_date === undefined ? dateHelper.getSundayLastTime( dateHelper.getLastWeekMonday() ) : dateHelper.getSundayLastTime(req.query.payment_date);
 
-        const payments = await user.getPayments({where: {createdAt: {[Op.and]: {[Op.gte]: initial_time, [Op.lte]: end_time}}}});
+        const payments = await user.getPayments({where: {payment_date: {[Op.and]: {[Op.gte]: initial_time, [Op.lte]: end_time}}}});
         if(payments.length === 0) return res.status(404).json({message: 'No hay registros de pagos para esta fecha y usuario'});
         return res.json(payments);
     },

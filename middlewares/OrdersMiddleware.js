@@ -49,4 +49,14 @@ module.exports = class OrdersMiddleware extends Validator {
         ];
     }
 
+    static validateQueryDate(req, res, next) {
+        if(!req.query.date) return next();
+        try {
+            const date = moment(req.query.date, 'YYYY-MM-DD', true);
+            if(date.isValid()) return next();
+            throw new Error();
+        }
+        catch(e) { return res.status(400).json({validation: {date: 'La fecha insertada es inválida'}}) }
+    }
+
 }

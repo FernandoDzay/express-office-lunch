@@ -14,5 +14,7 @@ router.post('/check-for-birthdays', CronsController.checkForBirhdays);
 
 router.delete('/daily-remove', CronsController.dailyRemove);
 
+router.put('/rotate-groups', CronsController.rotateGroups);
+
 
 module.exports = router;

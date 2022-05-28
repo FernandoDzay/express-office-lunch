@@ -8,14 +8,14 @@ module.exports = {
 
     async get(req, res, next) {
         let andWhereUser = "";
-        if(req.body.user_id) {
-            const user = await User.findByPk(req.body.user_id);
+        if(req.query.user_id) {
+            const user = await User.findByPk(req.query.user_id);
             if(user === null) return res.status(404).json({error: 'No se encontró el usuario'});
             andWhereUser = ` AND user_id = ${user.id}`;
         }
 
         const currentMonday = dateHelper.getMondayDate();
-        const replacements = req.body.date === undefined ? {createdAt: currentMonday} : {createdAt: dateHelper.getMondayDate(req.body.date)};
+        const replacements = req.query.date === undefined ? {createdAt: currentMonday} : {createdAt: dateHelper.getMondayDate(req.query.date)};
         const query = 
         `
             SELECT o.id, u.username, o.name, o.food_id, o.extra_id, o.price, o.discount, o.createdAt, o.updatedAt 
@@ -168,7 +168,21 @@ module.exports = {
 const userHasAlreadyFoodOrder = (orders) => orders.length > 0;
 
 function getOrdersWeekArray(orders) {
-    const ordersWeekArray = {total: 0, discount: 0, net_total: 0, orders: []};
+    const ordersWeekArray = {
+        total: 0, 
+        discount: 0, 
+        net_total: 0,
+        weekTotals: {
+            monday: {total: 0, discount: 0, net_total: 0},
+            tuesday: {total: 0, discount: 0, net_total: 0},
+            wednesday: {total: 0, discount: 0, net_total: 0},
+            thursday: {total: 0, discount: 0, net_total: 0},
+            friday: {total: 0, discount: 0, net_total: 0},
+            saturday: {total: 0, discount: 0, net_total: 0},
+            sunday: {total: 0, discount: 0, net_total: 0}
+        },
+        orders: []
+    };
     let previousUsername = null;
 
     orders.forEach((order, index) => {
@@ -207,6 +221,10 @@ function getOrdersWeekArray(orders) {
         ordersWeekArray.total += arrangedOrder.price;
         ordersWeekArray.discount += arrangedOrder.discount;
         ordersWeekArray.net_total += arrangedOrder.user_price;
+
+        ordersWeekArray.weekTotals[dayOfWeek].total += arrangedOrder.price;
+        ordersWeekArray.weekTotals[dayOfWeek].discount += arrangedOrder.discount;
+        ordersWeekArray.weekTotals[dayOfWeek].net_total += arrangedOrder.user_price;
 
         ordersWeekArray.orders[ ordersWeekArray.orders.length - 1 ].total += arrangedOrder.price;
         ordersWeekArray.orders[ ordersWeekArray.orders.length - 1 ].discount += arrangedOrder.discount;

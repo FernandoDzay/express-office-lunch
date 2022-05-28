@@ -8,7 +8,7 @@ module.exports = class PaymentsMiddleware extends Validator {
     static globalValidationRules = [
         body('user_id').optional().toInt().isInt({min: 0}).withMessage("group_id debe de ser un número"),
         body('concept').optional().escape().isLength({min: 4, max: 30}).withMessage("Cadena debe de tener longitud entre 4 y 30"),
-        body('quantity').optional().toFloat().isFloat({min: 1}).withMessage("Discount debe ser número, y mayor que 1"),
+        body('quantity').optional().toInt().isInt({min: 1}).withMessage("Discount debe ser número, y mayor que 1, no número flotante"),
         body('payment_date').optional().custom((value, {req}) => {
 
             const date = moment(value);
