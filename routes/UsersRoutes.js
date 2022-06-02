@@ -16,7 +16,7 @@ router.get('/logged', AuthMiddleware.verify, UsersController.getLoggedUser);
 
 router.get('/:id', AuthMiddleware.verify, AuthMiddleware.adminUserOnly, UsersMiddleware.requiredParamId(), UsersController.getUser);
 
-router.put('/update', AuthMiddleware.verify, AuthMiddleware.adminUserOnly, UsersMiddleware.requiredBodyId(), UsersController.update);
+router.put('/update', AuthMiddleware.verify, AuthMiddleware.adminUserOnly, UsersMiddleware.requiredBodyId(), /* UsersMiddleware.update(), */ UsersController.update);
 
 router.patch('/update-logged-user-image', UsersMiddleware.uploadImage(), UsersMiddleware.uploadErrorHandlder, AuthMiddleware.verify, UsersController.updateLoggedUserImage);
 

@@ -4,12 +4,12 @@ const {User} = require('../configs/sequelize/models');
 module.exports = {
 
     async get(req, res, next) {
-        const users = await User.findAll();
+        const users = await User.findAll({orderBy: [['is_admin', 'username']]});
         if(users.length === 0) return res.status(404).json({message: 'No se encontró ningún usuario'});
 
-        const usersResponse = req.body.logged_user.is_admin ? 
-        users.map(user => ({id: user.id, username: user.username, is_admin: user.is_admin, status: user.status})) :
-        users.map(user => ({id: user.id, username: user.username, status: user.status}));
+        const usersResponse = req.body.logged_user.is_admin ?
+        users.map(user => ({id: user.id, username: user.username, email: user.email, birth_month: user.birth_month, birth_day: user.birth_day, is_admin: user.is_admin, status: user.status})) :
+        users.map(user => ({id: user.id, username: user.username, email: user.email, birth_month: user.birth_month, birth_day: user.birth_day, status: user.status}));
 
         return res.json(usersResponse);
     },
@@ -27,7 +27,7 @@ module.exports = {
     },
 
     async update(req, res, next) {
-        const {id, email, username, birth_month, birth_day, is_guest, is_admin, status} = req.body;
+        const {id, email, username, birth_month, birth_day, /* is_guest, */ is_admin, status} = req.body;
         const user = await User.findByPk(id);
         if(user === null) return res.status(404).json({error: "no se encontró ningún usuario"})
         
@@ -35,7 +35,7 @@ module.exports = {
         user.username = username;
         user.birth_month = birth_month;
         user.birth_day = birth_day;
-        user.is_guest = is_guest;
+        // user.is_guest = is_guest;
         user.is_admin = is_admin;
         user.status = status;
 
