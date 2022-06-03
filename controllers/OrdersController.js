@@ -65,10 +65,11 @@ module.exports = {
         const orders = await Order.findAll({
             where: {createdAt: {[Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end}}},
             include: {model: Food, as: 'food'},
+            order: ['food_id', 'extra_id']
         });
 
         if(orders.length === 0) return res.status(404).json({message: 'No hay órdenes el día de hoy'});
-        const todaysOrders = getTodaysOrdersArray(orders);
+        const todaysOrders = getMakeOrderArray(orders);
 
         return res.json(todaysOrders);
     },
@@ -317,4 +318,45 @@ function getTodaysOrdersByUsersArray(orders) {
     });
     
     return todaysOrdersArray;
+}
+
+function getMakeOrderArray(orders) {
+    const todaysUserOrders = {
+        total: 0,
+        discount: 0,
+        net_total: 0,
+        orders: {
+            foods: [],
+            extras: [],
+        }
+    };
+
+    let previousId = {
+        food_id: null,
+        extra_id: null,
+    }
+    orders.forEach(order => {
+        const arrangedOrder = {
+            quantity: 1,
+            name: order.name,
+        };
+        if(order.food && order.food.short_name) arrangedOrder.name = order.food.short_name;
+
+        if(order.food_id) {
+            if(previousId.food_id === order.food_id) todaysUserOrders.orders.foods[todaysUserOrders.orders.foods.length - 1].quantity++;
+            else todaysUserOrders.orders.foods.push(arrangedOrder);
+            previousId.food_id = order.food_id;
+        }
+        else {
+            if(previousId.extra_id === order.extra_id) todaysUserOrders.orders.extras[todaysUserOrders.orders.extras.length - 1].quantity++;
+            else todaysUserOrders.orders.extras.push(arrangedOrder);
+            previousId.extra_id = order.extra_id;
+        }
+
+        todaysUserOrders.total += order.price;
+        todaysUserOrders.discount += order.discount;
+        todaysUserOrders.net_total += order.price - order.discount;
+    });
+    
+    return todaysUserOrders;
 }
