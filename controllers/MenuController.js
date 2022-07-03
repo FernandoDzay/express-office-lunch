@@ -14,7 +14,7 @@ module.exports = {
         });
         
         if(menu.length === 0) return res.status(404).json({status: 0, menu});
-        if(setting === 0) return res.json({status: 1, menu});
+        if(setting.int_value === 0) return res.json({status: 1, menu: []});
 
         const settingDiscount = await Setting.findOne({where: {setting: 'discount_price'}});
         const discount = settingDiscount ? settingDiscount.int_value : 0;

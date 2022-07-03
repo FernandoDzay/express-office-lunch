@@ -62,13 +62,24 @@ module.exports = {
         const today_start = dateHelper.getTodaysInitialTime();
         const today_end = dateHelper.getTodaysEndTime();
 
+        const setting = await Setting.findOne({where: {setting: 'menu_open'}});
+        let was_menu_open = setting.int_value;
+        setting.int_value = 0;
+        setting.save();
+
         const orders = await Order.findAll({
             where: {createdAt: {[Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end}}},
             include: {model: Food, as: 'food'},
             order: ['food_id', 'extra_id']
         });
 
-        if(orders.length === 0) return res.status(404).json({message: 'No hay órdenes el día de hoy'});
+        if(orders.length === 0) {
+            if(was_menu_open) {
+                setting.int_value = 1;
+                setting.save();
+            }
+            return res.status(404).json({message: 'No hay órdenes el día de hoy'});
+        }
         const todaysOrders = getMakeOrderArray(orders);
 
         return res.json(todaysOrders);

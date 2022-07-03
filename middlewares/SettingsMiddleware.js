@@ -33,7 +33,7 @@ module.exports = class SettingsMiddleware extends Validator {
         if(setting.int_value !== 0 && setting.int_value !== 1) return res.status(500).json({error: 'menu_open Debe de estar entre 0 y 1'});
 
         if(setting.int_value === 1) return next();
-        return res.json({error: 'El menú está cerrado', display: 'El menú está cerrado'})
+        return res.status(403).json({error: 'El menú está cerrado', display: 'El menú está cerrado'});
     }
     
 }
