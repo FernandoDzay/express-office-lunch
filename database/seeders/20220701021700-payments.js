@@ -46,9 +46,24 @@ module.exports = {
       const createdAt = moment().startOf('week').subtract(7 * i, 'day').add(1, 'day'); // Obtener lunes de hace (i) semanas
       const users_should_pay = await queryInterface.sequelize.query(query, {type: queryInterface.sequelize.QueryTypes.SELECT, replacements: {createdAt: createdAt.format()}});
 
+      const random_users_ids = [];
+      for(let i = 0; i < 10; i++) {
+        let random_user_id = getRandomInt(users_should_pay.length);
+        while(random_users_ids.find(element => element === random_user_id) !== undefined) random_user_id = getRandomInt(users_should_pay.length);
+
+        random_users_ids.push(random_user_id);
+      }
+
       users_should_pay.forEach(user_should_pay => {
-        const payment = {user_id: user_should_pay.id, concept: 'Pago completo', quantity: user_should_pay.total_to_pay, payment_date: createdAt.format(), createdAt: createdAt.format(), updatedAt: createdAt.format()};
-        payments.push(payment);
+        if(random_users_ids.find(random_user_id => random_user_id === user_should_pay.id) === undefined) {
+          const payment = {user_id: user_should_pay.id, concept: 'Pago completo', quantity: user_should_pay.total_to_pay, payment_date: createdAt.format(), createdAt: createdAt.format(), updatedAt: createdAt.format()};
+          payments.push(payment);
+        }
+        else {
+          const payment = {user_id: user_should_pay.id, payment_date: createdAt.format(), createdAt: createdAt.format(), updatedAt: createdAt.format()};
+          payments.push({...payment, concept: 'Primer pago', quantity: user_should_pay.total_to_pay - 10});
+          payments.push({...payment, concept: 'Segundo pago', quantity: 10});
+        }
       });
     }
     
