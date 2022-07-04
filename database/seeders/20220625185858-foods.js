@@ -18,11 +18,11 @@ const quantity = foods.length;
 module.exports = {
   async up (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkInsert('Foods', foods.map((food, index) => ({...food, id: i++, price: 50, createdAt: new Date(), updatedAt: new Date()})), {});
+    await queryInterface.bulkInsert('foods', foods.map((food, index) => ({...food, id: i++, price: 50, createdAt: new Date(), updatedAt: new Date()})), {});
   },
 
   async down (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkDelete('Foods', {id: Array(quantity).fill(null).map(item => i++)}, {});
+    await queryInterface.bulkDelete('foods', {id: Array(quantity).fill(null).map(item => i++)}, {});
   }
 };

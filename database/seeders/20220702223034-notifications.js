@@ -13,11 +13,11 @@ const quantity = notifications.length;
 module.exports = {
   async up (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkInsert('Notifications', notifications.map(notification => ({...notification, id: i++, title: 'Inicialización de proyecto', createdAt: new Date(), updatedAt: new Date()})), {});
+    await queryInterface.bulkInsert('notifications', notifications.map(notification => ({...notification, id: i++, title: 'Inicialización de proyecto', createdAt: new Date(), updatedAt: new Date()})), {});
   },
 
   async down (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkDelete('Notifications', {id: Array(quantity).fill(null).map(item => i++)}, {});
+    await queryInterface.bulkDelete('notifications', {id: Array(quantity).fill(null).map(item => i++)}, {});
   }
 };

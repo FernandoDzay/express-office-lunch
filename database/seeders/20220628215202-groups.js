@@ -12,11 +12,11 @@ const quantity = groups.length;
 module.exports = {
   async up (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkInsert('Groups', groups.map(group => ({...group, id: i++})), {});
+    await queryInterface.bulkInsert('groups', groups.map(group => ({...group, id: i++})), {});
   },
 
   async down (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkDelete('Groups', {id: Array(quantity).fill(null).map(item => i++)}, {});
+    await queryInterface.bulkDelete('groups', {id: Array(quantity).fill(null).map(item => i++)}, {});
   }
 };

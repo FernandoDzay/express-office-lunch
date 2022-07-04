@@ -11,11 +11,11 @@ const quantity = settings.length;
 module.exports = {
   async up (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkInsert('Settings', settings.map(setting => ({...setting, id: i++})), {});
+    await queryInterface.bulkInsert('settings', settings.map(setting => ({...setting, id: i++})), {});
   },
 
   async down (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkDelete('Settings', {id: Array(quantity).fill(null).map(item => i++)}, {});
+    await queryInterface.bulkDelete('settings', {id: Array(quantity).fill(null).map(item => i++)}, {});
   }
 };

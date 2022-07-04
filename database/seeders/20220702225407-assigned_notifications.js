@@ -19,11 +19,11 @@ module.exports = {
       })
     });
 
-    await queryInterface.bulkInsert('Assigned_notifications', assigned_notifications.map(assigned_notification => ({...assigned_notification, id: i++, createdAt: new Date(), updatedAt: new Date()})), {});
+    await queryInterface.bulkInsert('assigned_notifications', assigned_notifications.map(assigned_notification => ({...assigned_notification, id: i++, createdAt: new Date(), updatedAt: new Date()})), {});
   },
 
   async down (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkDelete('Assigned_notifications'/* , {id: Array(quantity).fill(null).map(item => i++)}, {} */);
+    await queryInterface.bulkDelete('assigned_notifications'/* , {id: Array(quantity).fill(null).map(item => i++)}, {} */);
   }
 };

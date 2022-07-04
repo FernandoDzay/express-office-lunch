@@ -67,11 +67,11 @@ module.exports = {
       });
     }
     
-    await queryInterface.bulkInsert('Payments', payments.map(payment => ({...payment, id: i++})), {});
+    await queryInterface.bulkInsert('payments', payments.map(payment => ({...payment, id: i++})), {});
   },
 
   async down (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkDelete('Payments'/* , {id: Array(quantity).fill(null).map(item => i++)}, {} */);
+    await queryInterface.bulkDelete('payments'/* , {id: Array(quantity).fill(null).map(item => i++)}, {} */);
   }
 };

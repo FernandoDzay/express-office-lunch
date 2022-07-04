@@ -14,11 +14,11 @@ const quantity = extras.length;
 module.exports = {
   async up (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkInsert('Extras', extras.map(extra => ({...extra, id: i++, createdAt: new Date(), updatedAt: new Date()})), {});
+    await queryInterface.bulkInsert('extras', extras.map(extra => ({...extra, id: i++, createdAt: new Date(), updatedAt: new Date()})), {});
   },
 
   async down (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkDelete('Extras', {id: Array(quantity).fill(null).map(item => i++)}, {});
+    await queryInterface.bulkDelete('extras', {id: Array(quantity).fill(null).map(item => i++)}, {});
   }
 };

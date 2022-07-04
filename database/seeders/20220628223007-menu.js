@@ -11,11 +11,11 @@ const quantity = menu.length;
 module.exports = {
   async up (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkInsert('Menu', menu.map(food => ({...food, id: i++})), {});
+    await queryInterface.bulkInsert('menu', menu.map(food => ({...food, id: i++})), {});
   },
 
   async down (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkDelete('Menu', {id: Array(quantity).fill(null).map(item => i++)}, {});
+    await queryInterface.bulkDelete('menu', {id: Array(quantity).fill(null).map(item => i++)}, {});
   }
 };

@@ -81,11 +81,11 @@ module.exports = {
       }
     }
 
-    await queryInterface.bulkInsert('Orders', orders.map(order => ({...order, id: i++})), {});
+    await queryInterface.bulkInsert('orders', orders.map(order => ({...order, id: i++})), {});
   },
 
   async down (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkDelete('Orders'/* , {id: Array(quantity).fill(null).map(item => i++)}, {} */);
+    await queryInterface.bulkDelete('orders'/* , {id: Array(quantity).fill(null).map(item => i++)}, {} */);
   }
 };
