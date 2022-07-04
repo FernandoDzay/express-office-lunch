@@ -22,37 +22,64 @@ module.exports = {
     const users = await queryInterface.sequelize.query('SELECT * FROM users WHERE id < 17', {type: queryInterface.sequelize.QueryTypes.SELECT});
 
     const today = moment();
+    const number_of_iterations_for_the_week = (moment().day() > 5 || moment().day() === 0) ? 5 : moment().day(); // 1: -> lunes, 5 -> viernes. El máximo valor debe de ser 5, impidiendo considerar sábado y domingo.
 
     // Esto se ejecuta 3 veces, para que sean 3 semanas de órdenes
     for(let i = 0; i < 3; i++) {
       if(i === 0) {
-        const number_of_iterations_for_the_week = moment().day() > 5 ? 5 : moment().day(); // 1: -> lunes, 5 -> viernes. El máximo valor debe de ser 5, impidiendo considerar sábado y domingo.
-        const index_date = moment().startOf('week').add(1, 'day'); // Obtener lunes
+        
+        const index_date = moment().day() === 0 ? moment().subtract(1, 'day').startOf('week').add(1, 'day') : moment().startOf('week').add(1, 'day'); // Obtener lunes
 
         for(let i = 0; i < number_of_iterations_for_the_week; i++) {
           const createdAt = index_date;
           users.forEach(user => {
             const random_food_id = getRandomInt(foods.length);
-            /* const users_with_double_food = [];
-            const users_with_extra = [];
-
-            for(let i = 0; i < 2; i++) {
-              users_with_double_food.push({user_id: getRandomInt(users.length), food_id: getRandomInt(foods.length)});
-            }
-
-            for(let i = 0; i < 5; i++) {
-              users_with_extra.push({user_id: getRandomInt(users.length), extra_id: getRandomInt(extras.length)});
-            } */
-
             const food = foods.find(food => food.id === random_food_id);
-            const order = {user_id: user.id, food_id: food.id, extra_id: null, name: food.full_name, price: 20, discount: 0, createdAt: createdAt.format(), updatedAt: createdAt.format()};
+            const order = {user_id: user.id, food_id: food.id, extra_id: null, name: food.full_name, price: food.price, discount, createdAt: createdAt.format(), updatedAt: createdAt.format()};
             orders.push(order);
           });
+
+          const users_with_double_food = [];
+          const users_with_extra = [];
+
+          for(let i = 0; i < 2; i++) {
+            let random_user_id = getRandomInt(users.length);
+            let random_food_id = getRandomInt(foods.length);
+
+            while(users_with_double_food.find(element => element.user_id === random_user_id) !== undefined) random_user_id = getRandomInt(users.length);
+            while(users_with_double_food.find(element => element.food_id === random_food_id) !== undefined) random_food_id = getRandomInt(foods.length);
+
+            users_with_double_food.push({user_id: random_user_id, food_id: random_food_id});
+          }
+          for(let i = 0; i < 4; i++) {
+            let random_user_id = getRandomInt(users.length);
+            let random_extra_id = getRandomInt(extras.length);
+
+            while(users_with_extra.find(element => element.user_id === random_user_id) !== undefined) random_user_id = getRandomInt(users.length);
+            while(users_with_extra.find(element => element.extra_id === random_extra_id) !== undefined) random_extra_id = getRandomInt(extras.length);
+
+            users_with_extra.push({user_id: random_user_id, extra_id: random_extra_id});
+          }
+
+          
+          users_with_double_food.forEach(element => {
+            const food = foods.find(food => food.id === element.food_id);
+            const order = {user_id: element.user_id, food_id: element.food_id, extra_id: null, name: food.full_name, price: food.price, discount: 0, createdAt: createdAt.format(), updatedAt: createdAt.format()};
+            orders.push(order);
+          })
+          users_with_extra.forEach(element => {
+            const extra = extras.find(extra => extra.id === element.extra_id);
+            const order = {user_id: element.user_id, food_id: null, extra_id: element.extra_id, name: extra.name, price: extra.price, discount: 0, createdAt: createdAt.format(), updatedAt: createdAt.format()};
+            orders.push(order);
+          })
+
           index_date.add(1, 'day');
         }
       }
       else {
-        const index_date = moment().startOf('week').subtract(7 * i, 'day').add(1, 'day'); // Obtener lunes de hace (i) semanas
+        const index_date = moment().day() === 0 ?
+        moment().subtract(1, 'day').startOf('week').subtract(7 * i, 'day').add(1, 'day')
+        : moment().startOf('week').subtract(7 * i, 'day').add(1, 'day'); // Obtener lunes de hace (i) semanas
 
         for(let i = 0; i < 5; i++) {
           const createdAt = index_date;
@@ -62,6 +89,40 @@ module.exports = {
             const order = {user_id: user.id, food_id: food.id, extra_id: null, name: food.full_name, price: food.price, discount, createdAt: createdAt.format(), updatedAt: createdAt.format()};
             orders.push(order);
           });
+
+          const users_with_double_food = [];
+          const users_with_extra = [];
+
+          for(let i = 0; i < 2; i++) {
+            let random_user_id = getRandomInt(users.length);
+            let random_food_id = getRandomInt(foods.length);
+
+            while(random_user_id === users_with_double_food.find(element => element.user_id === random_user_id)) random_user_id = getRandomInt(users.length);
+            while(random_food_id === users_with_double_food.find(element => element.food_id === random_food_id)) random_food_id = getRandomInt(foods.length);
+
+            users_with_double_food.push({user_id: random_user_id, food_id: random_food_id});
+          }
+          for(let i = 0; i < 4; i++) {
+            let random_user_id = getRandomInt(users.length);
+            let random_extra_id = getRandomInt(extras.length);
+
+            while(random_user_id === users_with_extra.find(element => element.user_id === random_user_id)) random_user_id = getRandomInt(users.length);
+            while(random_extra_id === users_with_extra.find(element => element.extra_id === random_extra_id)) random_extra_id = getRandomInt(extras.length);
+
+            users_with_extra.push({user_id: random_user_id, extra_id: random_extra_id});
+          }
+          
+          users_with_double_food.forEach(element => {
+            const food = foods.find(food => food.id === element.food_id);
+            const order = {user_id: element.user_id, food_id: element.food_id, extra_id: null, name: food.full_name, price: food.price, discount: 0, createdAt: createdAt.format(), updatedAt: createdAt.format()};
+            orders.push(order);
+          })
+          users_with_extra.forEach(element => {
+            const extra = extras.find(extra => extra.id === element.extra_id);
+            const order = {user_id: element.user_id, food_id: null, extra_id: element.extra_id, name: extra.name, price: extra.price, discount: 0, createdAt: createdAt.format(), updatedAt: createdAt.format()};
+            orders.push(order);
+          })
+
           index_date.add(1, 'day');
         }
       }
