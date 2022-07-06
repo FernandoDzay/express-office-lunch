@@ -24,7 +24,7 @@ const quantity = users.length;
 module.exports = {
   async up (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkInsert('users', users.map(user => ({...user, id: i, password: '$2b$10$I.O0TbikAicVHn7raHWH1O/nFHDM./WVdJeUJLSwQv5pe9TishSSq', image: `user_${i++}.jpg`, birth_day: 1, status: 1})), {});
+    await queryInterface.bulkInsert('users', users.map(user => ({...user, id: i, password: '$2b$10$I.O0TbikAicVHn7raHWH1O/nFHDM./WVdJeUJLSwQv5pe9TishSSq', image: `seeders/user_${i++}.jpg`, birth_day: 1, status: 1})), {});
   },
 
   async down (queryInterface, Sequelize) {

@@ -3,8 +3,8 @@
 const startAt = 1;
 const menu = [
   {food_id: 1},
+  {food_id: 2},
   {food_id: 3},
-  {food_id: 8},
 ];
 const quantity = menu.length;
 

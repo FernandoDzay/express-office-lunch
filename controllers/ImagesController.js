@@ -5,29 +5,34 @@ const { send } = require("process");
 module.exports = {
 
     users(req, res, next) {
-        const usersImagesPath = path.join(__dirname, '/../public/img/users/');
-        const userImage = req.params.filename;
-
-        return res.sendFile(usersImagesPath + userImage, function (err) {
-            if (err) {
-                next();
-            }
-        });
+        return returnImage(req, res, next, '/../public/img/users/');
     },
 
     foods(req, res, next) {
-        const foodsImagesPath = path.join(__dirname, '/../public/img/foods/');
-        const foodImage = req.params.filename;
+        return returnImage(req, res, next, '/../public/img/foods/');
+    },
 
-        return res.sendFile(foodsImagesPath + foodImage, function (err) {
-            if (err) {
-                next();
-            }
-        });
+    usersSeeds(req, res, next) {
+        return returnImage(req, res, next, '/../public/img/users/seeders/');
+    },
+
+    foodsSeeds(req, res, next) {
+        return returnImage(req, res, next, '/../public/img/foods/seeders/');
     },
 
     handleNotFound(req, res, next) {
         return res.status(404).send();
     }
 
+}
+
+
+const returnImage = (req, res, next, imagesPath) => {
+    const fullImagesPath = path.join(__dirname, imagesPath);
+
+    return res.sendFile(fullImagesPath + req.params.filename, function (err) {
+        if (err) {
+            next();
+        }
+    });
 }

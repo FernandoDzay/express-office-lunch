@@ -40,7 +40,7 @@ module.exports = {
         users.forEach(user => {
           const random_food_id = getRandomInt(foods.length);
           const food = foods.find(food => food.id === random_food_id);
-          const order = {user_id: user.id, food_id: food.id, extra_id: null, name: food.full_name, price: food.price, discount, createdAt: createdAt.format(), updatedAt: createdAt.format()};
+          const order = {user_id: user.id, food_id: food.id, extra_id: null, name: food.full_name, price: food.price, discount: food.price - discount, createdAt: createdAt.format(), updatedAt: createdAt.format()};
           orders.push(order);
         });
 
