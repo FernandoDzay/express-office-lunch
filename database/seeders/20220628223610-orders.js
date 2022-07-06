@@ -18,6 +18,7 @@ module.exports = {
 
     const foods = await queryInterface.sequelize.query('SELECT * FROM foods WHERE id >= 1 AND id < 10', {type: queryInterface.sequelize.QueryTypes.SELECT});
     const extras = await queryInterface.sequelize.query('SELECT * FROM extras WHERE id >= 1 AND id < 6', {type: queryInterface.sequelize.QueryTypes.SELECT});
+    const menu = await queryInterface.sequelize.query('SELECT foods.* FROM foods INNER JOIN menu ON foods.id = menu.food_id', {type: queryInterface.sequelize.QueryTypes.SELECT});
     const discount = await queryInterface.rawSelect('settings', {where: {setting: 'discount_price'}}, ['int_value']);
     const users = await queryInterface.sequelize.query('SELECT * FROM users WHERE id < 17', {type: queryInterface.sequelize.QueryTypes.SELECT});
 
@@ -39,7 +40,8 @@ module.exports = {
         const createdAt = index_date;
         users.forEach(user => {
           const random_food_id = getRandomInt(foods.length);
-          const food = foods.find(food => food.id === random_food_id);
+          const random_array_index = getRandomInt(menu.length) - 1;
+          const food = (i === 0 && j === (number_of_iterations_for_the_week - 1)) ? menu[random_array_index] : foods.find(food => food.id === random_food_id);
           const order = {user_id: user.id, food_id: food.id, extra_id: null, name: food.full_name, price: food.price, discount: food.price - discount, createdAt: createdAt.format(), updatedAt: createdAt.format()};
           orders.push(order);
         });
@@ -47,16 +49,20 @@ module.exports = {
         const users_with_double_food = [];
         const users_with_extra = [];
 
-        for(let i = 0; i < 2; i++) {
+        for(let k = 0; k < 2; k++) {
+          const random_array_index = getRandomInt(menu.length) - 1;
           let random_user_id = getRandomInt(users.length);
-          let random_food_id = getRandomInt(foods.length);
+          let random_food_id = (i === 0 && j === (number_of_iterations_for_the_week - 1)) ? menu[random_array_index].id : getRandomInt(foods.length);
 
           while(users_with_double_food.find(element => element.user_id === random_user_id) !== undefined) random_user_id = getRandomInt(users.length);
-          while(users_with_double_food.find(element => element.food_id === random_food_id) !== undefined) random_food_id = getRandomInt(foods.length);
+          while(users_with_double_food.find(element => element.food_id === random_food_id) !== undefined) {
+            const random_array_index = getRandomInt(menu.length) - 1;
+            random_food_id = (i === 0 && j === (number_of_iterations_for_the_week - 1)) ? menu[random_array_index].id : getRandomInt(foods.length);
+          }
 
           users_with_double_food.push({user_id: random_user_id, food_id: random_food_id});
         }
-        for(let i = 0; i < 4; i++) {
+        for(let k = 0; k < 4; k++) {
           let random_user_id = getRandomInt(users.length);
           let random_extra_id = getRandomInt(extras.length);
 
