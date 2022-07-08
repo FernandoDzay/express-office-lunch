@@ -17,6 +17,6 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     let i = startAt;
-    await queryInterface.bulkDelete('menu', {id: Array(quantity).fill(null).map(item => i++)}, {});
+    await queryInterface.bulkDelete('menu', {/* id: Array(quantity).fill(null).map(item => i++) */}, {});
   }
 };
