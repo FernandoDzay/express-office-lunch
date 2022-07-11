@@ -27,7 +27,7 @@ router.post('/create-user-order', SettingsMiddleware.verifyIfMenuIsOpen, OrdersM
 
 router.delete('/delete/:id', AuthMiddleware.adminUserOnly, OrdersMiddleware.requiredParamId(), OrdersController.delete);
 
-router.delete('/delete-user-order', SettingsMiddleware.verifyIfMenuIsOpen, OrdersMiddleware.checkForOneFoodOrExtra(), OrdersController.deleteUserOrder);
+router.delete('/delete-user-order', SettingsMiddleware.verifyIfMenuIsOpen, OrdersMiddleware.requiredBodyId(), OrdersController.deleteUserOrder);
 
 
 module.exports = router;

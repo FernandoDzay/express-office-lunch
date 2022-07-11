@@ -154,23 +154,25 @@ module.exports = {
     async deleteUserOrder(req, res, next) {
         const today_start = dateHelper.getTodaysInitialTime();
         const today_end = dateHelper.getTodaysEndTime();
+        const createdAt =  { [Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end} };
 
-        let order = null;
-        if(req.body.food_id) {
-            order = await Order.findOne({where: {
-                food_id: req.body.food_id,
-                user_id: req.body.logged_user.id,
-                createdAt: { [Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end} }}, order: [['discount', 'ASC']]});
-        }
-        else {
-            order = await Order.findOne({where: {
-                extra_id: req.body.extra_id,
-                user_id: req.body.logged_user.id,
-                createdAt: { [Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end} }}});
-        }
-
+        const order = await Order.findOne({where: {
+            id: req.body.id,
+            user_id: req.body.logged_user.id,
+            createdAt
+        }});
         if(order === null) return res.status(404).json({error: 'Órden no encontrada'});
         await order.destroy();
+
+        if(order.discount > 0) {
+            const setting = await Setting.findOne({where: {setting: 'discount_price'}});
+            const orderToAddDiscount = await Order.findOne({where: {food_id: {[Op.not]: null}, user_id: req.body.logged_user.id, createdAt}});
+            if(orderToAddDiscount !== null) {
+                orderToAddDiscount.discount = orderToAddDiscount.price - setting.int_value;
+                await orderToAddDiscount.save();
+            }
+        }
+
         return res.json({message: 'Órden borrada con éxito'});
     }
 
