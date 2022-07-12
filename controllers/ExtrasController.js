@@ -1,4 +1,6 @@
-const {Extra} = require('../configs/sequelize/models');
+const { Extra, Order } = require('../configs/sequelize/models');
+const { Op } = require("sequelize");
+const dateHelper = require('../utils/DateHelper');
 
 module.exports = {
 
@@ -37,8 +39,16 @@ module.exports = {
     },
 
     async delete(req, res) {
+        const today_start = dateHelper.getTodaysInitialTime();
+        const today_end = dateHelper.getTodaysEndTime();
+        const createdAt =  { [Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end} };
+
         const extra = await Extra.findByPk(req.params.id);
-        if(extra === null) return res.status(404).json({error: 'Comida no encontrada'});
+        if(extra === null) return res.status(404).json({error: 'Extra no encontrado'});
+
+        const order = await Order.findOne({where: {extra_id: extra.id, createdAt}});
+        if(order !== null) return res.status(400).json({error: 'Hay al menos un usuario que cuenta con éste extra. Se requiere que los usuarios anulen su pedido relacionado con éste extra'});
+
         await extra.destroy();
         return res.json({message: 'Extra borrada con éxito'});
     }

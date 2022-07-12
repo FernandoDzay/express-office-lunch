@@ -1,4 +1,6 @@
-const {Menu, Food, Setting} = require('../configs/sequelize/models');
+const {Menu, Food, Order, Setting} = require('../configs/sequelize/models');
+const dateHelper = require('../utils/DateHelper');
+const { Op } = require("sequelize");
 
 module.exports = {
 
@@ -35,8 +37,17 @@ module.exports = {
     },
 
     async removeFood(req, res) {
+        const today_start = dateHelper.getTodaysInitialTime();
+        const today_end = dateHelper.getTodaysEndTime();
+        const createdAt =  { [Op.and]: {[Op.gte]: today_start, [Op.lte]: today_end} };
+
+        
         const menu = await Menu.findByPk(req.params.id);
         if(menu === null) return res.status(404).json({error: 'Comida no encontrada en el menú'});
+
+        const order = await Order.findOne({where: {food_id: menu.food_id, createdAt}});
+        if(order !== null) return res.status(400).json({error: 'Hay al menos un usuario que cuenta con ésta comida. Se requiere que los usuarios anulen su pedido relacionado con esta comida'});
+
         await menu.destroy();
         return res.json({message: 'La comida ha sido quitada del menú con éxito'});
     }
