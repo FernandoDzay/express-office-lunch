@@ -47,7 +47,7 @@ module.exports = {
         if(extra === null) return res.status(404).json({error: 'Extra no encontrado'});
 
         const order = await Order.findOne({where: {extra_id: extra.id, createdAt}});
-        if(order !== null) return res.status(400).json({error: 'Hay al menos un usuario que cuenta con éste extra. Se requiere que los usuarios anulen su pedido relacionado con éste extra'});
+        if(order !== null) return res.status(400).json({error: 'Hay al menos un usuario que cuenta con éste extra. Se requiere que los usuarios anulen su pedido de hoy relacionado con éste extra'});
 
         await extra.destroy();
         return res.json({message: 'Extra borrada con éxito'});

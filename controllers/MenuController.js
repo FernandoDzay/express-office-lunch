@@ -46,7 +46,7 @@ module.exports = {
         if(menu === null) return res.status(404).json({error: 'Comida no encontrada en el menú'});
 
         const order = await Order.findOne({where: {food_id: menu.food_id, createdAt}});
-        if(order !== null) return res.status(400).json({error: 'Hay al menos un usuario que cuenta con ésta comida. Se requiere que los usuarios anulen su pedido relacionado con esta comida'});
+        if(order !== null) return res.status(400).json({error: 'Hay al menos un usuario que cuenta con ésta comida. Se requiere que los usuarios anulen su pedido de hoy relacionado con esta comida'});
 
         await menu.destroy();
         return res.json({message: 'La comida ha sido quitada del menú con éxito'});
