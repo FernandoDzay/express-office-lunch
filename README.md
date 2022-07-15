@@ -1,11 +1,8 @@
 # Office Lunch Platform - Backend
 
-## A Node.js Backend server made with express.js
-___
+A Node.js Backend server made with express.js
 
 ## Development setup
-___
-
 First, download dependencies.
 
 ```
@@ -67,27 +64,21 @@ npm run dev
 And the server will start on port 3001
 
 ## Production
-___
 You need to configure exactly the same as "dev mode". The difference is that you need to configure the **NODE_ENV** variable to "production", and instead of executing *npm run dev*, execute:
 ```
 npm run start
 ```
 
 ## Environment
-___
 You can set all the **DEV_**, **TEST_**, **PRODUCTION_** variables with their corresponding values. The project will read whatever the environment configured in **NODE_ENV** is.
 
 ## Prerequisites
-___
-
 ```
 node@v16.15.0 or higher
 npm@8.5.5 or higher
 ```
 
 ## Features
-___
-
 * Node Backend server with express.js
 * RESTful API
 * ORM project with sequelize
@@ -96,8 +87,6 @@ ___
 * Database seeders to fill the database with random data (for testing purposes)
 
 ## Technologies
-___
-
 * node.js with express.js framework
 * JWT Authentication
 * ORM with sequelize
