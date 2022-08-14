@@ -2,6 +2,9 @@
 
 A Node.js Backend server made with express.js
 
+## About the project
+If you want to know more about the context of the project, you can read it here: [https://github.com/FernandoDzay/office-lunch-react](https://github.com/FernandoDzay/office-lunch-react, 'Frontend of the project').
+
 ## Development setup
 First, download dependencies.
 
