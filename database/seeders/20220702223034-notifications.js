@@ -7,6 +7,7 @@ const notifications = [
   {description: 'Todas las órdenes y pagos anteriores, han sido borrados (en caso de que hubieran antes de la inicialización)'},
   {description: 'La tabla de settings está configurada como se debe'},
   {description: 'El usuario administrador, es Luis, puedes acceder a él con (email: luis@gmail.com, password: 1234)'},
+  {description: 'Si quieres entrar en modo no-administrador, puedes entrar a cuentas como: (pedro@gmail.com, laura@gmail.com, pablo@gmail.com), todos con password: 1234'},
 ];
 const quantity = notifications.length;
 
