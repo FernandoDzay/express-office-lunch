@@ -1,4 +1,4 @@
-FROM node:13.14.0
+FROM node:16
 WORKDIR /app
 COPY . .
 RUN npm install
@@ -15,4 +15,4 @@ EXPOSE 3001
 CMD cron && npm start
 
 # docker build -t express-office-lunch .
-# docker run -d -p 3012:3001 express-office-lunch
+# docker run -d -p 3012:3001 --name express-office-lunch express-office-lunch
