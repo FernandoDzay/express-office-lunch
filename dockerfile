@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y cron
 RUN echo "0 1 * * * cd /app && /usr/local/bin/npx sequelize-cli db:seed:undo:all && /usr/local/bin/npx sequelize-cli db:seed:all" > /etc/cron.d/sequelize-cron
 RUN chmod 0644 /etc/cron.d/sequelize-cron
 RUN crontab /etc/cron.d/sequelize-cron
+RUN node -e "console.log(process.env.PRODUCTION_HOST || 'NO HOST')"
 RUN export $(cat .env | xargs) && npx sequelize-cli db:migrate
 RUN export $(cat .env | xargs) && npx sequelize-cli db:seed:undo:all
 RUN export $(cat .env | xargs) && npx sequelize-cli db:seed:all
