@@ -18,3 +18,9 @@ CMD cron && npm start
 
 # docker build -t express-office-lunch .
 # docker run -d -p 3012:3001 --name express-office-lunch express-office-lunch
+
+
+
+# docker container stop express-office-lunch
+# docker container rm express-office-lunch
+# docker compose up
