@@ -3,7 +3,7 @@ services:
 
   node-application:
     build: .
-    image_name: express-office-lunch
+    image: express-office-lunch
     container_name: express-office-lunch
     ports:
       - "3012:3001"
