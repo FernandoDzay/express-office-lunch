@@ -1,15 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 
-# Iniciar el cron en segundo plano
+# Inicia cron en segundo plano
 cron
 
-# Mostrar el contenido del cron configurado (opcional para depuración)
-echo "=== CRON JOB ACTIVO ==="
-crontab -l
-
-# Redirigir la salida del cron a un archivo de log
+# Cola los logs del cron al stdout del contenedor
 touch /var/log/cron.log
 tail -f /var/log/cron.log &
 
-# Ejecutar la aplicación Node.js
+# Inicia tu app
 npm start
