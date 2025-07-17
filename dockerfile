@@ -24,6 +24,8 @@ RUN crontab /etc/cron.d/sequelize-cron
 # Asegurarse de que el script tenga permisos de ejecución
 RUN chmod +x /app/start.sh
 
+RUN touch /var/log/cron.log
+
 # Exponer el puerto de la aplicación
 EXPOSE 3001
 
@@ -37,4 +39,5 @@ CMD ["./start.sh"]
 
 # docker container stop express-office-lunch
 # docker container rm express-office-lunch
-# docker compose up
+# docker image rm express-office-lunch
+# docker compose up -d
