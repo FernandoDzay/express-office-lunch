@@ -12,6 +12,9 @@ RUN npm install
 RUN npm install -g dotenv-cli
 RUN apt-get update && apt-get install -y cron
 
+RUN touch /app/seed.log
+RUN chmod 666 /app/seed.log
+
 # Configurar el cron job
 RUN echo "* * * * * root echo 'cron funciona $(date)' >> /app/cron-prueba.log" >> /etc/cron.d/sequelize-cron
 RUN echo "* * * * * root cd /app && /usr/local/bin/npx sequelize-cli db:seed:undo:all && /usr/local/bin/npx sequelize-cli db:seed:all >> /app/seed.log 2>&1" >> /etc/cron.d/sequelize-cron
