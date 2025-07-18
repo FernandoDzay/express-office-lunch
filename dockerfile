@@ -1,42 +1,26 @@
 FROM node:16-bullseye
 
-# Crear y usar el directorio de trabajo
 WORKDIR /app
-
-# Copiar el código fuente y el script de inicio
 COPY . .
-COPY start.sh .
 
-# Instalar dependencias del proyecto y herramientas necesarias
-RUN npm install
-RUN npm install -g dotenv-cli
+RUN npm install && npm install -g dotenv-cli
 RUN apt-get update && apt-get install -y cron
 
-RUN touch /app/seed.log
-RUN chmod 666 /app/seed.log
+# Logs y permisos
+RUN touch /app/seed.log /app/cron-prueba.log /var/log/cron.log && chmod 666 /app/*.log
 
-# Configurar el cron job
-RUN echo "* * * * * root echo 'cron funciona $(date)' >> /app/cron-prueba.log" >> /etc/cron.d/sequelize-cron
-RUN echo "* * * * * root cd /app && /usr/local/bin/npx sequelize-cli db:seed:undo:all && /usr/local/bin/npx sequelize-cli db:seed:all >> /app/seed.log 2>&1" >> /etc/cron.d/sequelize-cron
+# Configurar cron job
+RUN echo "* * * * * root echo 'cron funciona \$(date)' >> /app/cron-prueba.log" > /etc/cron.d/sequelize-cron \
+ && echo "* * * * * root cd /app && npx sequelize-cli db:seed:undo:all && npx sequelize-cli db:seed:all >> /app/seed.log 2>&1" >> /etc/cron.d/sequelize-cron \
+ && chmod 0644 /etc/cron.d/sequelize-cron
 
-# Agrega un salto de línea final
-RUN echo "" >> /etc/cron.d/sequelize-cron
+# NO uses crontab aquí. Cron escanea automáticamente /etc/cron.d/
+# RUN crontab /etc/cron.d/sequelize-cron  <-- ELIMINAR
 
-# Asignar permisos adecuados al archivo de cron
-RUN chmod 0644 /etc/cron.d/sequelize-cron
+COPY start.sh .
+RUN chmod +x start.sh
 
-# Registrar el cron job
-RUN crontab /etc/cron.d/sequelize-cron
-
-# Asegurarse de que el script tenga permisos de ejecución
-RUN chmod +x /app/start.sh
-
-RUN touch /var/log/cron.log
-
-# Exponer el puerto de la aplicación
 EXPOSE 3001
-
-# Comando de inicio
 CMD ["./start.sh"]
 
 # docker build -t express-office-lunch .
