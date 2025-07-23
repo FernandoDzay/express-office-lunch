@@ -10,8 +10,7 @@ RUN apt-get update && apt-get install -y cron
 RUN touch /app/seed.log /app/cron-prueba.log /var/log/cron.log && chmod 666 /app/*.log
 
 # Configurar cron job
-RUN echo "* * * * * root echo 'cron funciona \$(date)' >> /app/cron-prueba.log" > /etc/cron.d/sequelize-cron \
- && echo "* * * * * root cd /app && npx sequelize-cli db:seed:undo:all && npx sequelize-cli db:seed:all >> /app/seed.log 2>&1" >> /etc/cron.d/sequelize-cron \
+RUN echo "* * * * * root cd /app && PATH=$PATH:/usr/local/bin /usr/local/bin/npx sequelize-cli db:seed:undo:all && PATH=$PATH:/usr/local/bin /usr/local/bin/npx sequelize-cli db:seed:all >> /app/seed.log 2>&1" > /etc/cron.d/sequelize-cron \
  && chmod 0644 /etc/cron.d/sequelize-cron
 
 # NO uses crontab aquí. Cron escanea automáticamente /etc/cron.d/
