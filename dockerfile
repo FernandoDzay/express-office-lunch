@@ -4,7 +4,8 @@ WORKDIR /app
 COPY . .
 
 RUN npm install && npm install -g dotenv-cli
-RUN apt-get update && apt-get install -y cron
+RUN apt-get update && apt-get install -y cron && apt-get install -y tzdata
+ENV TZ=America/Merida
 
 # Logs y permisos
 RUN touch /app/seed.log /app/cron-prueba.log /var/log/cron.log && chmod 666 /app/*.log
