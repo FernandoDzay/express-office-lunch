@@ -11,7 +11,7 @@ ENV TZ=America/Merida
 RUN touch /app/seed.log /app/cron-prueba.log /var/log/cron.log && chmod 666 /app/*.log
 
 # Configurar cron job
-RUN echo "0 1 * * * root cd /app && PATH=$PATH:/usr/local/bin /usr/local/bin/npx sequelize-cli db:seed:undo:all && PATH=$PATH:/usr/local/bin /usr/local/bin/npx sequelize-cli db:seed:all >> /app/seed.log 2>&1" > /etc/cron.d/sequelize-cron \
+RUN echo "0 6 * * * root cd /app && PATH=$PATH:/usr/local/bin /usr/local/bin/npx sequelize-cli db:seed:undo:all && PATH=$PATH:/usr/local/bin /usr/local/bin/npx sequelize-cli db:seed:all >> /app/seed.log 2>&1" > /etc/cron.d/sequelize-cron \
  && chmod 0644 /etc/cron.d/sequelize-cron
 
 # NO uses crontab aquí. Cron escanea automáticamente /etc/cron.d/
